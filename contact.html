@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Talent Loop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">◆</span>
+                <span class="logo-text">Talent Loop</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li><a href="assessment.html" class="cta-link">Take Assessment</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-hero">
+        <div class="container">
+            <h1 class="page-title">Get in Touch</h1>
+            <p class="page-subtitle">We're here to help you take the next step in your career journey</p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Let's Connect</h2>
+                    <p>Whether you're a job seeker looking for your next opportunity or an employer searching for top talent, we're here to help.</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">🌐</div>
+                            <div class="contact-text">
+                                <h4>Website</h4>
+                                <p><a href="https://www.talent-loop.org">www.talent-loop.org</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-text">
+                                <h4>General Inquiries</h4>
+                                <p><a href="mailto:info@talent-loop.org">info@talent-loop.org</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">💼</div>
+                            <div class="contact-text">
+                                <h4>Career Opportunities</h4>
+                                <p><a href="mailto:careers@talent-loop.org">careers@talent-loop.org</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🕐</div>
+                            <div class="contact-text">
+                                <h4>Business Hours</h4>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM EST<br>Saturday - Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #1a4d7d;">
+                        <h4 style="color: #1a4d7d; margin-bottom: 0.75rem;">📍 Quick Contact Reference</h4>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.95rem;"><strong>For Job Seekers:</strong> <a href="mailto:careers@talent-loop.org">careers@talent-loop.org</a></p>
+                        <p style="margin-bottom: 0.5rem; font-size: 0.95rem;"><strong>For Employers:</strong> <a href="mailto:info@talent-loop.org">info@talent-loop.org</a></p>
+                        <p style="margin-bottom: 0; font-size: 0.95rem;"><strong>Partnership Inquiries:</strong> <a href="mailto:info@talent-loop.org">info@talent-loop.org</a></p>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contactForm">
+                        <h3>Send Us a Message</h3>
+                        
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inquiry">Inquiry Type *</label>
+                            <select id="inquiry" name="inquiry" required>
+                                <option value="">Select an option</option>
+                                <option value="job-seeker">I'm a Job Seeker</option>
+                                <option value="employer">I'm an Employer</option>
+                                <option value="partnership">Partnership Inquiry</option>
+                                <option value="support">General Support</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        
+                        <div class="form-success" id="formSuccess" style="display: none;">
+                            <p>✓ Thank you for your message! We'll get back to you within 24 hours.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>How long does the assessment take?</h4>
+                    <p>Our comprehensive assessment typically takes 10-15 minutes to complete. Take your time to provide thoughtful answers for the best match results.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is there a fee for your services?</h4>
+                    <p>For job seekers, our services are completely free. We're compensated by our partner companies when we successfully place candidates.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What is the priority verification process?</h4>
+                    <p>Our trusted partner IdentityIQ offers a verification service that fast-tracks your application and puts you ahead of standard applicants for premium opportunities.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How quickly will I hear back?</h4>
+                    <p>After completing your assessment, our team reviews applications within 48 hours. Verified priority candidates often receive responses within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span class="logo-icon">◆</span>
+                        <span class="logo-text">Talent Loop</span>
+                    </div>
+                    <p>Bridging the gap between talent and opportunity since 2015.</p>
+                    <div class="footer-contact">
+                        <p><strong>Email:</strong> <a href="mailto:info@talent-loop.org">info@talent-loop.org</a></p>
+                        <p><strong>Careers:</strong> <a href="mailto:careers@talent-loop.org">careers@talent-loop.org</a></p>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="assessment.html">Assessment</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="legal.html">Terms & Conditions</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="LinkedIn">in</a>
+                        <a href="#" aria-label="Twitter">𝕏</a>
+                        <a href="#" aria-label="Facebook">f</a>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <a href="https://www.talent-loop.org" style="color: rgba(255,255,255,0.8);">www.talent-loop.org</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Talent Loop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
