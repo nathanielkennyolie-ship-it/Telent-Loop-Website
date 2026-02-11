@@ -1,5 +1,5 @@
 /* ================================
-   CareerBridge - Professional Job Agency Website
+   Talent Loop - Professional Job Agency Website
    ================================ */
 
 /* CSS Variables */
@@ -199,7 +199,7 @@ a {
 }
 
 /* ================================
-   Hero Section
+   Hero Section with Animated Background
    ================================ */
 
 .hero {
@@ -211,29 +211,35 @@ a {
     overflow: hidden;
 }
 
-.video-background {
+/* Animated gradient background */
+.animated-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;
-}
-
-.video-background video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(26, 77, 125, 0.85), rgba(15, 53, 87, 0.75));
+    background: linear-gradient(135deg, #0f3557 0%, #1a4d7d 25%, #2a6ba8 50%, #1a4d7d 75%, #0f3557 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     z-index: -1;
+}
+
+/* Optional: Add subtle pattern overlay */
+.animated-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(30deg, rgba(255, 255, 255, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.03) 87.5%, rgba(255, 255, 255, 0.03)),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.03) 87.5%, rgba(255, 255, 255, 0.03)),
+        linear-gradient(30deg, rgba(255, 255, 255, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.03) 87.5%, rgba(255, 255, 255, 0.03)),
+        linear-gradient(150deg, rgba(255, 255, 255, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.03) 87.5%, rgba(255, 255, 255, 0.03));
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+    opacity: 0.3;
 }
 
 .hero-content {
@@ -242,6 +248,8 @@ a {
     max-width: 800px;
     padding: 0 20px;
     animation: fadeInUp 1s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .hero-title {
@@ -498,6 +506,10 @@ a {
 
 .footer-col a:hover {
     color: var(--accent-color);
+}
+
+.footer-contact p {
+    margin-bottom: 0.5rem;
 }
 
 .social-links {
@@ -1321,6 +1333,18 @@ a {
     }
     60% {
         transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
     }
 }
 
