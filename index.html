@@ -34,8 +34,14 @@
     <section class="hero">
         <div class="video-background">
             <video autoplay muted loop playsinline id="bgVideo">
-                <source src="https://cdn.coverr.co/videos/coverr-business-people-walking-in-modern-office-7819/1080p.mp4" type="video/mp4">
-                <source src="https://cdn.coverr.co/videos/coverr-people-working-in-a-busy-office-2507/1080p.mp4" type="video/mp4">
+                <!-- Primary video source - Corporate office with people -->
+                <source src="https://cdn.pixabay.com/video/2022/05/31/119024-716628828_large.mp4" type="video/mp4">
+                
+                <!-- Fallback video if first doesn't load -->
+                <source src="https://cdn.pixabay.com/video/2019/08/01/25308-352034374_large.mp4" type="video/mp4">
+                
+                <!-- If you upload your own video to GitHub, replace above with: -->
+                <!-- <source src="office-background.mp4" type="video/mp4"> -->
             </video>
             <div class="video-overlay"></div>
         </div>
