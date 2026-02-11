@@ -38,53 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
-    // ================================
-    // MOBILE VIDEO FIX
-    // ================================
-    const video = document.getElementById('bgVideo');
-    
-    if (video) {
-        // Force play video on mobile devices
-        const playVideo = () => {
-            video.play().catch(error => {
-                console.log('Video autoplay prevented:', error);
-                // If autoplay fails, try again on user interaction
-                document.addEventListener('touchstart', function playOnTouch() {
-                    video.play();
-                    document.removeEventListener('touchstart', playOnTouch);
-                }, { once: true });
-            });
-        };
-        
-        // Try to play immediately
-        playVideo();
-        
-        // Play when video metadata is loaded
-        video.addEventListener('loadedmetadata', playVideo);
-        
-        // Play when page becomes visible (important for mobile)
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && video.paused) {
-                playVideo();
-            }
-        });
-        
-        // Ensure video stays muted (required for autoplay on mobile)
-        video.muted = true;
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        
-        // Fallback: Play on any user interaction
-        const userInteractionEvents = ['click', 'touchstart', 'scroll'];
-        userInteractionEvents.forEach(event => {
-            document.addEventListener(event, function playOnInteraction() {
-                if (video.paused) {
-                    video.play();
-                }
-            }, { once: true });
-        });
-    }
 });
 
 // Navbar scroll effect
@@ -116,7 +69,7 @@ function animateCounter(element, target, duration = 2000) {
 
 // Intersection Observer for Stats Animation
 const observerOptions = {
-    threshold: 0.5,
+    threshold: 0.2,
     rootMargin: '0px'
 };
 
