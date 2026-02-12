@@ -3,10 +3,18 @@
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Quiz script loaded successfully!');
+    
     // Personal Information Form Elements
     const personalInfoForm = document.getElementById('personalInfoForm');
     const personalDetailsForm = document.getElementById('personalDetailsForm');
     const assessmentIntro = document.getElementById('assessmentIntro');
+    
+    console.log('Form elements found:', {
+        personalInfoForm: !!personalInfoForm,
+        personalDetailsForm: !!personalDetailsForm,
+        assessmentIntro: !!assessmentIntro
+    });
     
     // Assessment Elements
     const startButton = document.getElementById('startAssessment');
@@ -27,18 +35,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let debounceTimer;
     
     // ================================
-    // Address Autocomplete Setup (No API Key Needed!)
-    // Uses Nominatim - OpenStreetMap's free geocoding service
+    // Address Autocomplete Setup
     // ================================
     function initAddressAutocomplete() {
         const addressInput = document.getElementById('address');
         const suggestionsDiv = document.getElementById('addressSuggestions');
         
-        if (!addressInput || !suggestionsDiv) return;
+        console.log('Initializing address autocomplete...');
+        console.log('Address input found:', !!addressInput);
+        console.log('Suggestions div found:', !!suggestionsDiv);
+        
+        if (!addressInput || !suggestionsDiv) {
+            console.error('Missing address elements!');
+            return;
+        }
+        
+        console.log('Address autocomplete initialized successfully!');
         
         // Listen for typing in address field
         addressInput.addEventListener('input', function() {
             const query = this.value.trim();
+            console.log('Address input:', query);
             
             // Clear previous timer
             clearTimeout(debounceTimer);
@@ -51,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Debounce API calls (wait 500ms after user stops typing)
             debounceTimer = setTimeout(() => {
+                console.log('Searching for address:', query);
                 searchAddress(query);
             }, 500);
         });
@@ -67,6 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const suggestionsDiv = document.getElementById('addressSuggestions');
         
         try {
+            console.log('Fetching addresses from Nominatim...');
+            
             // Using Nominatim (OpenStreetMap) - completely free, no API key!
             const response = await fetch(
                 `https://nominatim.openstreetmap.org/search?` +
@@ -76,17 +96,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 `limit=5`,
                 {
                     headers: {
-                        'User-Agent': 'TalentLoop/1.0' // Required by Nominatim
+                        'Accept': 'application/json'
                     }
                 }
             );
             
-            if (!response.ok) throw new Error('Failed to fetch addresses');
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch addresses');
+            }
             
             const results = await response.json();
+            console.log('Found addresses:', results.length);
             
             if (results.length === 0) {
-                suggestionsDiv.style.display = 'none';
+                suggestionsDiv.innerHTML = '<div class="address-suggestion-item" style="color: #999; cursor: default;">No addresses found</div>';
+                suggestionsDiv.style.display = 'block';
                 return;
             }
             
@@ -95,24 +121,35 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Address search error:', error);
-            suggestionsDiv.style.display = 'none';
+            suggestionsDiv.innerHTML = '<div class="address-suggestion-item" style="color: #999; cursor: default;">Error loading addresses. Please enter manually.</div>';
+            suggestionsDiv.style.display = 'block';
+            
+            // Hide error message after 3 seconds
+            setTimeout(() => {
+                suggestionsDiv.style.display = 'none';
+            }, 3000);
         }
     }
     
     function displaySuggestions(results) {
         const suggestionsDiv = document.getElementById('addressSuggestions');
         
+        console.log('Displaying suggestions...');
+        
         // Clear previous suggestions
         suggestionsDiv.innerHTML = '';
         
         // Create suggestion items
-        results.forEach(result => {
+        results.forEach((result, index) => {
             const item = document.createElement('div');
             item.className = 'address-suggestion-item';
             item.textContent = result.display_name;
             
+            console.log(`Suggestion ${index + 1}:`, result.display_name);
+            
             // Click handler to fill in the form
             item.addEventListener('click', function() {
+                console.log('Selected address:', result.display_name);
                 fillAddressFields(result);
                 suggestionsDiv.style.display = 'none';
             });
@@ -126,6 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function fillAddressFields(addressData) {
         const addr = addressData.address;
+        
+        console.log('Filling address fields with:', addr);
         
         // Extract address components
         const streetNumber = addr.house_number || '';
@@ -150,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        console.log('Address filled:', {
+        console.log('Address filled successfully:', {
             address: document.getElementById('address').value,
             city: city,
             state: state,
@@ -166,8 +205,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle Personal Information Form Submission
     // ================================
     if (personalDetailsForm) {
+        console.log('Adding submit handler to personal details form');
+        
         personalDetailsForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Personal details form submitted!');
             
             // Validate resume upload
             const resumeFile = document.getElementById('resumeUpload').files[0];
@@ -212,34 +254,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 resumeFileType: resumeFile.type
             };
             
+            console.log('Personal info collected:', personalInfo);
+            
             // Store personal info in localStorage
             try {
                 localStorage.setItem('talentloop_personal_info', JSON.stringify(personalInfo));
-                console.log('Personal information saved:', personalInfo);
+                console.log('Personal information saved to localStorage');
             } catch (error) {
                 console.error('Error saving personal information:', error);
             }
             
             // Hide personal info form
+            console.log('Hiding personal info form...');
             personalInfoForm.style.display = 'none';
             
             // Show assessment intro (not repeating the form)
+            console.log('Showing assessment intro...');
             assessmentIntro.style.display = 'block';
             
             // Smooth scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            console.log('Transition complete! Assessment intro should be visible.');
         });
+    } else {
+        console.error('personalDetailsForm not found!');
     }
     
     // ================================
     // Start Assessment
     // ================================
     if (startButton) {
+        console.log('Adding click handler to start button');
+        
         startButton.addEventListener('click', function() {
+            console.log('Start Assessment button clicked!');
+            
             // Hide intro
+            console.log('Hiding assessment intro...');
             assessmentIntro.style.display = 'none';
             
             // Show assessment container
+            console.log('Showing assessment container...');
             assessmentContainer.style.display = 'block';
             
             // Initialize first question
@@ -248,7 +304,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            console.log('Assessment started! Quiz should be visible.');
         });
+    } else {
+        console.error('Start button not found!');
     }
     
     // ================================
