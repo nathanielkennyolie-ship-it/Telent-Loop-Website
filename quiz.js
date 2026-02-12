@@ -24,8 +24,147 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalQuestions = 10;
     const answers = {};
     let personalInfo = {};
+    let debounceTimer;
     
+    // ================================
+    // Address Autocomplete Setup (No API Key Needed!)
+    // Uses Nominatim - OpenStreetMap's free geocoding service
+    // ================================
+    function initAddressAutocomplete() {
+        const addressInput = document.getElementById('address');
+        const suggestionsDiv = document.getElementById('addressSuggestions');
+        
+        if (!addressInput || !suggestionsDiv) return;
+        
+        // Listen for typing in address field
+        addressInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            // Clear previous timer
+            clearTimeout(debounceTimer);
+            
+            // Hide suggestions if query is too short
+            if (query.length < 3) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            // Debounce API calls (wait 500ms after user stops typing)
+            debounceTimer = setTimeout(() => {
+                searchAddress(query);
+            }, 500);
+        });
+        
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                suggestionsDiv.style.display = 'none';
+            }
+        });
+    }
+    
+    async function searchAddress(query) {
+        const suggestionsDiv = document.getElementById('addressSuggestions');
+        
+        try {
+            // Using Nominatim (OpenStreetMap) - completely free, no API key!
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?` +
+                `format=json&` +
+                `q=${encodeURIComponent(query)}&` +
+                `addressdetails=1&` +
+                `limit=5`,
+                {
+                    headers: {
+                        'User-Agent': 'TalentLoop/1.0' // Required by Nominatim
+                    }
+                }
+            );
+            
+            if (!response.ok) throw new Error('Failed to fetch addresses');
+            
+            const results = await response.json();
+            
+            if (results.length === 0) {
+                suggestionsDiv.style.display = 'none';
+                return;
+            }
+            
+            // Display suggestions
+            displaySuggestions(results);
+            
+        } catch (error) {
+            console.error('Address search error:', error);
+            suggestionsDiv.style.display = 'none';
+        }
+    }
+    
+    function displaySuggestions(results) {
+        const suggestionsDiv = document.getElementById('addressSuggestions');
+        
+        // Clear previous suggestions
+        suggestionsDiv.innerHTML = '';
+        
+        // Create suggestion items
+        results.forEach(result => {
+            const item = document.createElement('div');
+            item.className = 'address-suggestion-item';
+            item.textContent = result.display_name;
+            
+            // Click handler to fill in the form
+            item.addEventListener('click', function() {
+                fillAddressFields(result);
+                suggestionsDiv.style.display = 'none';
+            });
+            
+            suggestionsDiv.appendChild(item);
+        });
+        
+        // Show suggestions
+        suggestionsDiv.style.display = 'block';
+    }
+    
+    function fillAddressFields(addressData) {
+        const addr = addressData.address;
+        
+        // Extract address components
+        const streetNumber = addr.house_number || '';
+        const street = addr.road || addr.street || '';
+        const city = addr.city || addr.town || addr.village || addr.municipality || '';
+        const state = addr.state || addr.province || addr.region || '';
+        const zipcode = addr.postcode || '';
+        const countryCode = addr.country_code ? addr.country_code.toUpperCase() : '';
+        
+        // Fill in the form fields
+        document.getElementById('address').value = (streetNumber + ' ' + street).trim() || addressData.display_name.split(',')[0];
+        document.getElementById('city').value = city;
+        document.getElementById('state').value = state;
+        document.getElementById('zipcode').value = zipcode;
+        
+        // Set country dropdown
+        const countrySelect = document.getElementById('country');
+        for (let i = 0; i < countrySelect.options.length; i++) {
+            if (countrySelect.options[i].value === countryCode) {
+                countrySelect.selectedIndex = i;
+                break;
+            }
+        }
+        
+        console.log('Address filled:', {
+            address: document.getElementById('address').value,
+            city: city,
+            state: state,
+            zipcode: zipcode,
+            country: countryCode
+        });
+    }
+    
+    // Initialize address autocomplete
+    initAddressAutocomplete();
+    
+    // ================================
     // Handle Personal Information Form Submission
+    // ================================
     if (personalDetailsForm) {
         personalDetailsForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -64,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 address: formData.get('address'),
                 city: formData.get('city'),
                 state: formData.get('state'),
+                zipcode: formData.get('zipcode'),
                 country: formData.get('country'),
                 linkedinUrl: formData.get('linkedinUrl') || '',
                 agreeTerms: formData.get('agreeTerms') === 'on',
@@ -80,8 +220,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error saving personal information:', error);
             }
             
-            // Show assessment intro
+            // Hide personal info form
             personalInfoForm.style.display = 'none';
+            
+            // Show assessment intro (not repeating the form)
             assessmentIntro.style.display = 'block';
             
             // Smooth scroll to top
@@ -89,16 +231,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ================================
     // Start Assessment
+    // ================================
     if (startButton) {
         startButton.addEventListener('click', function() {
+            // Hide intro
             assessmentIntro.style.display = 'none';
+            
+            // Show assessment container
             assessmentContainer.style.display = 'block';
+            
+            // Initialize first question
+            showQuestion(1);
             updateProgress();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
     
+    // ================================
     // Question Navigation
+    // ================================
     function showQuestion(questionNumber) {
         const slides = document.querySelectorAll('.question-slide');
         slides.forEach(slide => {
@@ -194,7 +349,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // ================================
     // Form Submission
+    // ================================
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -292,7 +449,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // ================================
     // Keyboard navigation
+    // ================================
     document.addEventListener('keydown', function(e) {
         if (assessmentContainer.style.display === 'block') {
             if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
@@ -309,7 +468,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // ================================
     // Prevent accidental page refresh
+    // ================================
     window.addEventListener('beforeunload', function(e) {
         if (assessmentContainer.style.display === 'block' && currentQuestion > 1) {
             e.preventDefault();
