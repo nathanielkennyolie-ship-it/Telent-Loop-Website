@@ -131,6 +131,11 @@ a {
 .logo-image {
     height: 40px;
     width: auto;
+    margin-right: 10px;
+}
+
+.footer-logo .logo-image {
+    height: 35px;
 }
 
 .logo-icon {
@@ -1046,8 +1051,9 @@ a {
 
 /* Personal Information Form */
 .personal-info-form {
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
+    padding: 2rem;
 }
 
 .info-form {
@@ -1438,6 +1444,28 @@ a {
 .next-steps li {
     color: var(--text-secondary);
     margin-bottom: 0.75rem;
+}
+
+/* ================================
+   Contact Info Form Styling
+   ================================ */
+
+.contact-info-form {
+    background: var(--bg-lighter);
+    padding: 3rem;
+    border-radius: 16px;
+    margin-top: 2rem;
+}
+
+.contact-info-form .form-group select {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
 }
 
 /* ================================
