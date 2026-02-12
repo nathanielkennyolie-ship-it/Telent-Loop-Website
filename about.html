@@ -107,7 +107,7 @@
                     </div>
                     <div class="team-member">
                         <div class="member-image">
-                            <div class="placeholder-img">MC</div>
+                            <img src="michael-chen.jpg" alt="Michael Chen">
                         </div>
                         <h4>Michael Chen</h4>
                         <p class="member-title">CTO</p>
@@ -115,7 +115,7 @@
                     </div>
                     <div class="team-member">
                         <div class="member-image">
-                            <div class="placeholder-img">RP</div>
+                            <img src="rachel-patel.jpg" alt="Rachel Patel">
                         </div>
                         <h4>Rachel Patel</h4>
                         <p class="member-title">Head of Client Services</p>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="team-member">
                         <div class="member-image">
-                            <div class="placeholder-img">DW</div>
+                            <img src="david-williams.jpg" alt="David Williams">
                         </div>
                         <h4>David Williams</h4>
                         <p class="member-title">Head of Candidate Experience</p>
@@ -144,8 +144,8 @@
                     </div>
                     <p>Bridging the gap between talent and opportunity since 2015.</p>
                     <div class="footer-contact">
-                        <p><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#3b52555d547b4f5a575e554f165754544b1554495c"><span class="__cf_email__" data-cfemail="3a53545c557a4e5b565f544e175655554a1455485d">[email&#160;protected]</span></a></p>
-                        <p><strong>Careers:</strong> <a href="/cdn-cgi/l/email-protection#b4d7d5c6d1d1c6c7f4c0d5d8d1dac099d8dbdbc49adbc6d3"><span class="__cf_email__" data-cfemail="187b796a7d7d6a6b586c79747d766c357477776836776a7f">[email&#160;protected]</span></a></p>
+                        <p><strong>Email:</strong> <a href="mailto:info@talent-loop.org">info@talent-loop.org</a></p>
+                        <p><strong>Careers:</strong> <a href="mailto:careers@talent-loop.org">careers@talent-loop.org</a></p>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -174,3 +174,30 @@
                     </div>
                     <p style="margin-top: 1rem; font-size: 0.9rem;">
                         <a href="https://www.talent-loop.org" style="color: rgba(255,255,255,0.8);">www.talent-loop.org</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Talent Loop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
