@@ -73,6 +73,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const answers = {};
     let contactInfo = {};
     
+    // Quicken affiliate URL
+    const QUICKEN_VERIFICATION_URL = 'https://quicken.sjv.io/OemEbP';
+    
     // Handle Personal Info Form
     if (contactInfoForm) {
         contactInfoForm.addEventListener('submit', function(e) {
@@ -162,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-advance
+    // Auto-advance on selection (disabled for question 10)
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     radioButtons.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -193,38 +196,76 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const verificationChoice = answers['q10'];
+            
+            // Store all data first
+            storeAssessmentData({ contactInfo, answers });
+            
+            // Hide the quiz
             assessmentContainer.style.display = 'none';
+            
+            // Show completion message
             assessmentComplete.style.display = 'block';
             
             const completionMessage = document.getElementById('completionMessage');
             
             if (verificationChoice === 'yes-verify') {
+                // Open Quicken in NEW TAB
+                window.open(QUICKEN_VERIFICATION_URL, '_blank');
+                
+                // Show congratulatory message on current page
                 completionMessage.innerHTML = `
-                    <div class="priority-badge">⚡ Priority Status Selected</div>
-                    <p style="margin-top: 1rem;"><strong>Excellent choice!</strong> You've chosen to verify your identity for priority placement.</p>
-                    <p style="margin-top: 1rem;">In a real-world scenario, you would now be redirected to <strong>IdentityIQ</strong> to complete your verification process.</p>
-                    <ul style="text-align: left; margin: 1.5rem auto; max-width: 500px;">
-                        <li>Priority placement in employer searches</li>
-                        <li>Faster response times (within 24 hours)</li>
-                        <li>Access to exclusive job opportunities</li>
-                        <li>Dedicated account manager support</li>
-                    </ul>
-                    <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
-                        <strong>Demo Note:</strong> This is a demonstration. In production, you would be redirected to IdentityIQ.
+                    <div class="priority-badge">⚡ Priority Status - Verification in Progress</div>
+                    <p style="margin-top: 1.5rem; font-size: 1.2rem;"><strong>Congratulations!</strong> You've taken the first step toward priority placement.</p>
+                    
+                    <div style="background: #e7f3ff; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid var(--primary-color);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📋 What's Happening Now:</h3>
+                        <ol style="text-align: left; margin-left: 1.5rem; line-height: 1.8;">
+                            <li>A new window has opened with <strong>Quicken's verification platform</strong></li>
+                            <li>Complete the quick verification process there</li>
+                            <li>Once verified, you'll receive <strong>priority status</strong> in our system</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #ffc107;">
+                        <h3 style="color: #856404; margin-bottom: 1rem;">📞 Next Steps:</h3>
+                        <p style="color: #856404; margin-bottom: 0.5rem;">Once you've completed the Quicken verification:</p>
+                        <ul style="text-align: left; margin-left: 1.5rem; color: #856404; line-height: 1.8;">
+                            <li>Our team will be notified of your priority status</li>
+                            <li>A career consultant will <strong>contact you via phone</strong> within 24 hours</li>
+                            <li>You'll receive exclusive access to premium job opportunities</li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                        <strong>Don't see the verification window?</strong> 
+                        <a href="${QUICKEN_VERIFICATION_URL}" target="_blank" style="color: var(--primary-color); text-decoration: underline;">Click here to open it manually</a>
                     </p>
                 `;
+                
             } else {
+                // Standard application message
                 completionMessage.innerHTML = `
-                    <p><strong>Thank you for completing the assessment!</strong></p>
-                    <p style="margin-top: 1rem;">Your responses have been recorded. You'll remain in our standard candidate pool.</p>
-                    <p style="margin-top: 1rem; padding: 1rem; background: #d1ecf1; border-radius: 8px; border-left: 4px solid #0c5460;">
-                        <strong>Tip:</strong> You can upgrade to priority status later through your candidate dashboard.
-                    </p>
+                    <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment!</strong></p>
+                    
+                    <div style="background: #d1ecf1; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #0c5460;">
+                        <h3 style="color: #0c5460; margin-bottom: 1rem;">📋 What Happens Next:</h3>
+                        <ul style="text-align: left; margin-left: 1.5rem; color: #0c5460; line-height: 1.8;">
+                            <li>Your assessment has been saved in our standard candidate pool</li>
+                            <li>Our team will review your profile within 48 hours</li>
+                            <li>You'll receive job matches via email when suitable positions become available</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border-left: 4px solid #ffc107;">
+                        <p style="color: #856404; margin-bottom: 0;">
+                            <strong>💡 Tip:</strong> Want faster results? You can upgrade to priority status anytime through your candidate dashboard by completing the Quicken verification.
+                        </p>
+                    </div>
                 `;
             }
             
+            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            storeAssessmentData({ contactInfo, answers });
         });
     }
     
@@ -234,12 +275,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 timestamp: new Date().toISOString(),
                 contactInfo: data.contactInfo,
                 answers: data.answers,
-                status: data.answers.q10 === 'yes-verify' ? 'priority' : 'standard'
+                status: data.answers.q10 === 'yes-verify' ? 'priority' : 'standard',
+                quickenVerificationSent: data.answers.q10 === 'yes-verify'
             };
             localStorage.setItem('talent_loop_assessment', JSON.stringify(assessmentData));
             console.log('Assessment data stored:', assessmentData);
+            
+            // In production, send to your server:
+            // fetch('/api/save-assessment', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(assessmentData)
+            // });
+            
         } catch (error) {
             console.error('Error storing assessment data:', error);
         }
     }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (assessmentContainer.style.display === 'block') {
+            if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
+                if (validateCurrentQuestion()) {
+                    nextBtn.click();
+                }
+            } else if (e.key === 'ArrowLeft' && currentQuestion > 1) {
+                prevBtn.click();
+            }
+        }
+    });
+    
+    // Prevent accidental page refresh
+    window.addEventListener('beforeunload', function(e) {
+        if (assessmentContainer.style.display === 'block' && currentQuestion > 1) {
+            e.preventDefault();
+            e.returnValue = 'You have an assessment in progress. Are you sure you want to leave?';
+            return e.returnValue;
+        }
+    });
 });
