@@ -13,9 +13,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <!-- If you have logo.png, it will show. If not, shows diamond symbol -->
-                <img src="logo.png" alt="Talent Loop Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span class="logo-icon" style="display: none;">◆</span>
+                <img src="logo.png" alt="Talent Loop Logo" class="logo-image">
                 <span class="logo-text">Talent Loop</span>
             </div>
             <ul class="nav-menu" id="navMenu">
@@ -23,7 +21,7 @@
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li><a href="assessment.html" class="cta-link active">Take Assessment</a></li>
+                <li><a href="assessment.html" class="cta-link">Take Assessment</a></li>
             </ul>
             <div class="hamburger" id="hamburger">
                 <span></span>
@@ -35,13 +33,14 @@
 
     <section class="assessment-section">
         <div class="container">
-            
-            <!-- STEP 1: Personal Information Form -->
-            <div class="personal-info-form" id="personalInfoForm">
-                <h1 class="page-title">Let's Get Started</h1>
-                <p class="intro-text">Please provide your contact information before beginning the assessment.</p>
-                
-                <form id="contactInfoForm" class="contact-info-form">
+            <!-- Personal Information Form -->
+            <div id="personalInfoSection" class="personal-info-form">
+                <div class="section-header">
+                    <h2>Start Your Career Assessment</h2>
+                    <p>Tell us about yourself to begin your personalized career journey</p>
+                </div>
+
+                <form id="personalInfoForm" class="info-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">First Name *</label>
@@ -65,545 +64,496 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="address">Street Address *</label>
-                        <input type="text" id="address" name="address" placeholder="123 Main Street" required>
+                        <label for="linkedin">LinkedIn Profile (Optional)</label>
+                        <input type="url" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/yourprofile">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="city">City *</label>
-                            <input type="text" id="city" name="city" required>
+                            <label for="currentTitle">Current Job Title</label>
+                            <input type="text" id="currentTitle" name="currentTitle">
                         </div>
                         <div class="form-group">
-                            <label for="zipCode">ZIP/Postal Code *</label>
-                            <input type="text" id="zipCode" name="zipCode" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="country">Country *</label>
-                            <select id="country" name="country" required>
-                                <option value="">Select Country</option>
-                                <option value="United States">United States</option>
-                                <option value="Canada">Canada</option>
-                                <option value="United Kingdom">United Kingdom</option>
-                                <option value="Australia">Australia</option>
-                                <option value="Germany">Germany</option>
-                                <option value="France">France</option>
-                                <option value="Italy">Italy</option>
-                                <option value="Spain">Spain</option>
-                                <option value="Netherlands">Netherlands</option>
-                                <option value="Belgium">Belgium</option>
-                                <option value="Switzerland">Switzerland</option>
-                                <option value="Austria">Austria</option>
-                                <option value="Sweden">Sweden</option>
-                                <option value="Norway">Norway</option>
-                                <option value="Denmark">Denmark</option>
-                                <option value="Finland">Finland</option>
-                                <option value="Ireland">Ireland</option>
-                                <option value="Portugal">Portugal</option>
-                                <option value="Greece">Greece</option>
-                                <option value="Poland">Poland</option>
-                                <option value="Czech Republic">Czech Republic</option>
-                                <option value="Hungary">Hungary</option>
-                                <option value="Romania">Romania</option>
-                                <option value="Bulgaria">Bulgaria</option>
-                                <option value="Croatia">Croatia</option>
-                                <option value="India">India</option>
-                                <option value="China">China</option>
-                                <option value="Japan">Japan</option>
-                                <option value="South Korea">South Korea</option>
-                                <option value="Singapore">Singapore</option>
-                                <option value="Malaysia">Malaysia</option>
-                                <option value="Thailand">Thailand</option>
-                                <option value="Indonesia">Indonesia</option>
-                                <option value="Philippines">Philippines</option>
-                                <option value="Vietnam">Vietnam</option>
-                                <option value="New Zealand">New Zealand</option>
-                                <option value="South Africa">South Africa</option>
-                                <option value="Nigeria">Nigeria</option>
-                                <option value="Kenya">Kenya</option>
-                                <option value="Egypt">Egypt</option>
-                                <option value="Morocco">Morocco</option>
-                                <option value="Brazil">Brazil</option>
-                                <option value="Mexico">Mexico</option>
-                                <option value="Argentina">Argentina</option>
-                                <option value="Chile">Chile</option>
-                                <option value="Colombia">Colombia</option>
-                                <option value="Peru">Peru</option>
-                                <option value="Venezuela">Venezuela</option>
-                                <option value="Ecuador">Ecuador</option>
-                                <option value="United Arab Emirates">United Arab Emirates</option>
-                                <option value="Saudi Arabia">Saudi Arabia</option>
-                                <option value="Qatar">Qatar</option>
-                                <option value="Kuwait">Kuwait</option>
-                                <option value="Israel">Israel</option>
-                                <option value="Turkey">Turkey</option>
-                                <option value="Russia">Russia</option>
-                                <option value="Ukraine">Ukraine</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="state">State/Province *</label>
-                            <select id="state" name="state" required>
-                                <option value="">Select Country First</option>
+                            <label for="yearsExperience">Years of Experience *</label>
+                            <select id="yearsExperience" name="yearsExperience" required>
+                                <option value="">Select...</option>
+                                <option value="0-2">0-2 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="6-10">6-10 years</option>
+                                <option value="11-15">11-15 years</option>
+                                <option value="16+">16+ years</option>
                             </select>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
+                    <div class="form-group">
+                        <label for="resume">Upload Resume (Optional)</label>
+                        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                        <small>Accepted formats: PDF, DOC, DOCX (Max 5MB)</small>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <span>I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="legal.html" target="_blank">Terms & Conditions</a> *</span>
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
+                    </div>
+
+                    <div class="form-note">
+                        <p>Your information is secure and will only be used for career matching purposes.</p>
+                        <p>The assessment takes approximately 5-7 minutes to complete.</p>
+                    </div>
                 </form>
             </div>
 
-            <!-- STEP 2: Assessment Intro -->
-            <div class="assessment-intro" id="assessmentIntro" style="display: none;">
-                <h1 class="page-title">Career Assessment</h1>
-                <p class="intro-text">Welcome to the Talent Loop Career Assessment! This comprehensive evaluation will help us understand your skills, experience, and career goals to match you with the perfect opportunities.</p>
-                
-                <div class="assessment-benefits">
-                    <div class="benefit-item">
-                        <span class="benefit-icon">✓</span>
-                        <div class="benefit-text">
-                            <h3>10-Minute Assessment</h3>
-                            <p>Quick and comprehensive evaluation</p>
-                        </div>
-                    </div>
-                    <div class="benefit-item">
-                        <span class="benefit-icon">✓</span>
-                        <div class="benefit-text">
-                            <h3>Personalized Matches</h3>
-                            <p>Opportunities tailored to your profile</p>
-                        </div>
-                    </div>
-                    <div class="benefit-item">
-                        <span class="benefit-icon">✓</span>
-                        <div class="benefit-text">
-                            <h3>Priority Option</h3>
-                            <p>Get verified for fast-track placement</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary btn-large" id="startAssessment">Start Assessment</button>
-            </div>
-
-            <!-- STEP 3: Assessment Quiz -->
-            <div class="assessment-container" id="assessmentContainer" style="display: none;">
+            <!-- Assessment Questions -->
+            <div id="assessmentSection" class="assessment-container" style="display: none;">
                 <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-fill" id="progressBar"></div>
                 </div>
-                <div class="progress-text">
-                    <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+                <p class="progress-text"><span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></p>
+
+                <!-- Question 1: Career Stage -->
+                <div class="question-slide active" data-question="1">
+                    <h2 class="question-title">What best describes your current career stage?</h2>
+                    <p class="question-subtitle">This helps us understand your experience level and career goals</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q1" value="entry" required>
+                            <div class="option-content">
+                                <span class="option-title">🌱 Entry Level</span>
+                                <span class="option-desc">0-2 years of professional experience</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q1" value="mid">
+                            <div class="option-content">
+                                <span class="option-title">📈 Mid-Level Professional</span>
+                                <span class="option-desc">3-7 years of experience, seeking growth</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q1" value="senior">
+                            <div class="option-content">
+                                <span class="option-title">⭐ Senior Professional</span>
+                                <span class="option-desc">8-15 years, ready for leadership roles</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q1" value="executive">
+                            <div class="option-content">
+                                <span class="option-title">👔 Executive Level</span>
+                                <span class="option-desc">15+ years, seeking C-suite or director positions</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" style="visibility: hidden;">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
                 </div>
 
-                <form id="assessmentForm">
-                    <!-- Question 1 -->
-                    <div class="question-slide active" data-question="1">
-                        <h2 class="question-title">What is your current employment status?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q1" value="employed-looking" required>
-                                <span class="option-content">
-                                    <span class="option-title">Employed, but looking</span>
-                                    <span class="option-desc">I have a job but seeking new opportunities</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q1" value="employed-passive" required>
-                                <span class="option-content">
-                                    <span class="option-title">Employed, open to offers</span>
-                                    <span class="option-desc">Happy where I am, but open to the right opportunity</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q1" value="unemployed-active" required>
-                                <span class="option-content">
-                                    <span class="option-title">Unemployed, actively looking</span>
-                                    <span class="option-desc">Currently seeking employment</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q1" value="student" required>
-                                <span class="option-content">
-                                    <span class="option-title">Student/Recent Graduate</span>
-                                    <span class="option-desc">Entering the job market</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 2 -->
-                    <div class="question-slide" data-question="2">
-                        <h2 class="question-title">How many years of professional experience do you have?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q2" value="0-2" required>
-                                <span class="option-content">
-                                    <span class="option-title">0-2 years</span>
-                                    <span class="option-desc">Entry level or early career</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q2" value="3-5" required>
-                                <span class="option-content">
-                                    <span class="option-title">3-5 years</span>
-                                    <span class="option-desc">Building expertise</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q2" value="6-10" required>
-                                <span class="option-content">
-                                    <span class="option-title">6-10 years</span>
-                                    <span class="option-desc">Mid-career professional</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q2" value="10+" required>
-                                <span class="option-content">
-                                    <span class="option-title">10+ years</span>
-                                    <span class="option-desc">Senior level expertise</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 3 -->
-                    <div class="question-slide" data-question="3">
-                        <h2 class="question-title">What is your primary industry or field?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="technology" required>
-                                <span class="option-content">
-                                    <span class="option-title">Technology & IT</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="finance" required>
-                                <span class="option-content">
-                                    <span class="option-title">Finance & Banking</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="healthcare" required>
-                                <span class="option-content">
-                                    <span class="option-title">Healthcare & Medical</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="marketing" required>
-                                <span class="option-content">
-                                    <span class="option-title">Marketing & Sales</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="engineering" required>
-                                <span class="option-content">
-                                    <span class="option-title">Engineering</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q3" value="other" required>
-                                <span class="option-content">
-                                    <span class="option-title">Other Industry</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 4 -->
-                    <div class="question-slide" data-question="4">
-                        <h2 class="question-title">What is your highest level of education?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q4" value="high-school" required>
-                                <span class="option-content">
-                                    <span class="option-title">High School Diploma</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q4" value="associate" required>
-                                <span class="option-content">
-                                    <span class="option-title">Associate Degree</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q4" value="bachelor" required>
-                                <span class="option-content">
-                                    <span class="option-title">Bachelor's Degree</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q4" value="master" required>
-                                <span class="option-content">
-                                    <span class="option-title">Master's Degree</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q4" value="doctorate" required>
-                                <span class="option-content">
-                                    <span class="option-title">Doctorate/PhD</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 5 -->
-                    <div class="question-slide" data-question="5">
-                        <h2 class="question-title">What type of work arrangement do you prefer?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q5" value="remote" required>
-                                <span class="option-content">
-                                    <span class="option-title">Fully Remote</span>
-                                    <span class="option-desc">Work from anywhere</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q5" value="hybrid" required>
-                                <span class="option-content">
-                                    <span class="option-title">Hybrid</span>
-                                    <span class="option-desc">Mix of remote and office</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q5" value="onsite" required>
-                                <span class="option-content">
-                                    <span class="option-title">On-site</span>
-                                    <span class="option-desc">In-office work</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q5" value="flexible" required>
-                                <span class="option-content">
-                                    <span class="option-title">Flexible</span>
-                                    <span class="option-desc">Open to any arrangement</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 6 -->
-                    <div class="question-slide" data-question="6">
-                        <h2 class="question-title">What is your desired annual salary range?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q6" value="30-50k" required>
-                                <span class="option-content">
-                                    <span class="option-title">$30,000 - $50,000</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q6" value="50-75k" required>
-                                <span class="option-content">
-                                    <span class="option-title">$50,000 - $75,000</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q6" value="75-100k" required>
-                                <span class="option-content">
-                                    <span class="option-title">$75,000 - $100,000</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q6" value="100-150k" required>
-                                <span class="option-content">
-                                    <span class="option-title">$100,000 - $150,000</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q6" value="150k+" required>
-                                <span class="option-content">
-                                    <span class="option-title">$150,000+</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 7 -->
-                    <div class="question-slide" data-question="7">
-                        <h2 class="question-title">How soon are you available to start a new position?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q7" value="immediate" required>
-                                <span class="option-content">
-                                    <span class="option-title">Immediately</span>
-                                    <span class="option-desc">Available now</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q7" value="2-weeks" required>
-                                <span class="option-content">
-                                    <span class="option-title">Within 2 weeks</span>
-                                    <span class="option-desc">Short notice period</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q7" value="1-month" required>
-                                <span class="option-content">
-                                    <span class="option-title">1 month</span>
-                                    <span class="option-desc">Standard notice</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q7" value="2-months+" required>
-                                <span class="option-content">
-                                    <span class="option-title">2+ months</span>
-                                    <span class="option-desc">Extended notice or planning ahead</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 8 -->
-                    <div class="question-slide" data-question="8">
-                        <h2 class="question-title">What is your preferred company size?</h2>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q8" value="startup" required>
-                                <span class="option-content">
-                                    <span class="option-title">Startup (1-50 employees)</span>
-                                    <span class="option-desc">Fast-paced, wear many hats</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q8" value="small" required>
-                                <span class="option-content">
-                                    <span class="option-title">Small Business (51-200)</span>
-                                    <span class="option-desc">Close-knit, growing company</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q8" value="medium" required>
-                                <span class="option-content">
-                                    <span class="option-title">Mid-size (201-1000)</span>
-                                    <span class="option-desc">Established with room to grow</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q8" value="enterprise" required>
-                                <span class="option-content">
-                                    <span class="option-title">Enterprise (1000+)</span>
-                                    <span class="option-desc">Large corporation, structured</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q8" value="no-preference" required>
-                                <span class="option-content">
-                                    <span class="option-title">No Preference</span>
-                                    <span class="option-desc">Open to any size</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 9 -->
-                    <div class="question-slide" data-question="9">
-                        <h2 class="question-title">What matters most to you in your next role?</h2>
-                        <p class="question-subtitle">Select your top priority</p>
-                        <div class="question-options">
-                            <label class="option-card">
-                                <input type="radio" name="q9" value="compensation" required>
-                                <span class="option-content">
-                                    <span class="option-title">Compensation & Benefits</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q9" value="growth" required>
-                                <span class="option-content">
-                                    <span class="option-title">Career Growth & Development</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q9" value="balance" required>
-                                <span class="option-content">
-                                    <span class="option-title">Work-Life Balance</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q9" value="culture" required>
-                                <span class="option-content">
-                                    <span class="option-title">Company Culture & Values</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q9" value="impact" required>
-                                <span class="option-content">
-                                    <span class="option-title">Making an Impact</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Question 10 - Priority Verification -->
-                    <div class="question-slide" data-question="10">
-                        <h2 class="question-title">Fast-Track Your Application with Priority Verification</h2>
-                        <div class="priority-info">
-                            <div class="priority-badge">⚡ Priority Placement</div>
-                            <p class="priority-description">Stand out from regular applicants! Complete identity verification through our trusted partner <strong>IdentityIQ</strong> to receive priority status in our candidate pool.</p>
-                            
-                            <div class="priority-benefits">
-                                <h4>Priority Candidates Receive:</h4>
-                                <ul>
-                                    <li>✓ Top placement in employer searches</li>
-                                    <li>✓ Faster response times (within 24 hours)</li>
-                                    <li>✓ Access to exclusive opportunities</li>
-                                    <li>✓ Dedicated account manager</li>
-                                    <li>✓ Interview preparation support</li>
-                                </ul>
+                <!-- Question 2: Industry Preference -->
+                <div class="question-slide" data-question="2">
+                    <h2 class="question-title">Which industry interests you most?</h2>
+                    <p class="question-subtitle">Select the field where you see yourself thriving</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q2" value="tech" required>
+                            <div class="option-content">
+                                <span class="option-title">💻 Technology</span>
+                                <span class="option-desc">Software, IT, SaaS, Tech Startups</span>
                             </div>
-
-                            <div class="priority-partner">
-                                <p><strong>Powered by IdentityIQ</strong> - A trusted leader in identity verification services</p>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q2" value="finance">
+                            <div class="option-content">
+                                <span class="option-title">💰 Finance</span>
+                                <span class="option-desc">Banking, Investment, FinTech, Accounting</span>
                             </div>
-                        </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q2" value="healthcare">
+                            <div class="option-content">
+                                <span class="option-title">🏥 Healthcare</span>
+                                <span class="option-desc">Medical, Pharma, Health Tech</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q2" value="creative">
+                            <div class="option-content">
+                                <span class="option-title">🎨 Creative & Marketing</span>
+                                <span class="option-desc">Design, Advertising, Media, Content</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q2" value="other">
+                            <div class="option-content">
+                                <span class="option-title">🔧 Other Industries</span>
+                                <span class="option-desc">Manufacturing, Education, Retail, etc.</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
 
-                        <div class="question-options verification-options">
-                            <label class="option-card priority-option">
-                                <input type="radio" name="q10" value="yes-verify" required>
-                                <span class="option-content">
-                                    <span class="option-icon">⚡</span>
-                                    <span class="option-title">Yes, verify me for priority status</span>
-                                    <span class="option-desc">I want to fast-track my application and receive priority placement</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q10" value="no-standard" required>
-                                <span class="option-content">
-                                    <span class="option-title">No, continue with standard application</span>
-                                    <span class="option-desc">I'll proceed with regular processing (still eligible for all opportunities)</span>
-                                </span>
-                            </label>
-                        </div>
+                <!-- Question 3: Work Environment -->
+                <div class="question-slide" data-question="3">
+                    <h2 class="question-title">What's your ideal work environment?</h2>
+                    <p class="question-subtitle">Choose the setting where you perform best</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q3" value="remote" required>
+                            <div class="option-content">
+                                <span class="option-title">🏠 Fully Remote</span>
+                                <span class="option-desc">Work from anywhere, maximum flexibility</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q3" value="hybrid">
+                            <div class="option-content">
+                                <span class="option-title">🔄 Hybrid</span>
+                                <span class="option-desc">Mix of office and remote work</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q3" value="office">
+                            <div class="option-content">
+                                <span class="option-title">🏢 In-Office</span>
+                                <span class="option-desc">Prefer collaborative office environment</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q3" value="flexible">
+                            <div class="option-content">
+                                <span class="option-title">✨ Flexible</span>
+                                <span class="option-desc">Open to any arrangement</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
 
-                        <p class="verification-note">
-                            <small>By selecting verification, you'll be redirected to IdentityIQ's secure platform. Your information will be handled according to their privacy policy. This service is optional and does not guarantee employment.</small>
+                <!-- Question 4: Company Size -->
+                <div class="question-slide" data-question="4">
+                    <h2 class="question-title">What company size appeals to you?</h2>
+                    <p class="question-subtitle">Different sizes offer different cultures and opportunities</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q4" value="startup" required>
+                            <div class="option-content">
+                                <span class="option-title">🚀 Startup</span>
+                                <span class="option-desc">1-50 employees, high growth potential</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q4" value="small">
+                            <div class="option-content">
+                                <span class="option-title">📊 Small Business</span>
+                                <span class="option-desc">51-200 employees, established but agile</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q4" value="medium">
+                            <div class="option-content">
+                                <span class="option-title">🏗️ Mid-Size</span>
+                                <span class="option-desc">201-1,000 employees, structured growth</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q4" value="enterprise">
+                            <div class="option-content">
+                                <span class="option-title">🏛️ Enterprise</span>
+                                <span class="option-desc">1,000+ employees, resources and stability</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 5: Career Priorities -->
+                <div class="question-slide" data-question="5">
+                    <h2 class="question-title">What matters most in your next role?</h2>
+                    <p class="question-subtitle">Select your top priority</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q5" value="compensation" required>
+                            <div class="option-content">
+                                <span class="option-title">💵 Competitive Compensation</span>
+                                <span class="option-desc">Salary, benefits, and financial growth</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q5" value="growth">
+                            <div class="option-content">
+                                <span class="option-title">📚 Learning & Growth</span>
+                                <span class="option-desc">Development opportunities and career advancement</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q5" value="balance">
+                            <div class="option-content">
+                                <span class="option-title">⚖️ Work-Life Balance</span>
+                                <span class="option-desc">Flexibility and personal time</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q5" value="impact">
+                            <div class="option-content">
+                                <span class="option-title">🌍 Purpose & Impact</span>
+                                <span class="option-desc">Meaningful work and social impact</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 6: Timeline -->
+                <div class="question-slide" data-question="6">
+                    <h2 class="question-title">When are you looking to make a move?</h2>
+                    <p class="question-subtitle">This helps us prioritize the right opportunities</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q6" value="immediate" required>
+                            <div class="option-content">
+                                <span class="option-title">⚡ Immediately</span>
+                                <span class="option-desc">Ready to start ASAP</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q6" value="1-2months">
+                            <div class="option-content">
+                                <span class="option-title">📅 1-2 Months</span>
+                                <span class="option-desc">Actively looking</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q6" value="3-6months">
+                            <div class="option-content">
+                                <span class="option-title">🔍 3-6 Months</span>
+                                <span class="option-desc">Exploring options</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q6" value="passive">
+                            <div class="option-content">
+                                <span class="option-title">👀 Passive</span>
+                                <span class="option-desc">Open to the right opportunity</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 7: Salary Expectations -->
+                <div class="question-slide" data-question="7">
+                    <h2 class="question-title">What's your target salary range?</h2>
+                    <p class="question-subtitle">Annual compensation expectations</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="under50k" required>
+                            <div class="option-content">
+                                <span class="option-title">Under $50,000</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="50k-75k">
+                            <div class="option-content">
+                                <span class="option-title">$50,000 - $75,000</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="75k-100k">
+                            <div class="option-content">
+                                <span class="option-title">$75,000 - $100,000</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="100k-150k">
+                            <div class="option-content">
+                                <span class="option-title">$100,000 - $150,000</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="150k-200k">
+                            <div class="option-content">
+                                <span class="option-title">$150,000 - $200,000</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q7" value="200k+">
+                            <div class="option-content">
+                                <span class="option-title">$200,000+</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 8: Relocation -->
+                <div class="question-slide" data-question="8">
+                    <h2 class="question-title">Are you willing to relocate?</h2>
+                    <p class="question-subtitle">This expands your opportunities significantly</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q8" value="yes" required>
+                            <div class="option-content">
+                                <span class="option-title">✈️ Yes, willing to relocate</span>
+                                <span class="option-desc">Open to opportunities nationwide or globally</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q8" value="maybe">
+                            <div class="option-content">
+                                <span class="option-title">🤔 For the right opportunity</span>
+                                <span class="option-desc">Would consider exceptional opportunities</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q8" value="no">
+                            <div class="option-content">
+                                <span class="option-title">📍 Prefer to stay local</span>
+                                <span class="option-desc">Looking for opportunities in my area</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 9: Skills Confidence -->
+                <div class="question-slide" data-question="9">
+                    <h2 class="question-title">How confident are you in your skills?</h2>
+                    <p class="question-subtitle">Self-assessment helps us match you appropriately</p>
+                    <div class="question-options">
+                        <label class="option-card">
+                            <input type="radio" name="q9" value="expert" required>
+                            <div class="option-content">
+                                <span class="option-title">🏆 Expert</span>
+                                <span class="option-desc">Industry leader, can mentor others</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q9" value="proficient">
+                            <div class="option-content">
+                                <span class="option-title">⭐ Proficient</span>
+                                <span class="option-desc">Strong skills, work independently</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q9" value="competent">
+                            <div class="option-content">
+                                <span class="option-title">✅ Competent</span>
+                                <span class="option-desc">Solid foundation, still learning</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q9" value="developing">
+                            <div class="option-content">
+                                <span class="option-title">📖 Developing</span>
+                                <span class="option-desc">Building skills, eager to learn</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="question-navigation">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <!-- Question 10: Priority Verification (Final Question) -->
+                <div class="question-slide" data-question="10">
+                    <h2 class="question-title">Accelerate Your Application</h2>
+                    <p class="question-subtitle">Get priority access to exclusive opportunities</p>
+                    
+                    <div class="priority-info">
+                        <span class="priority-badge">🚀 PRIORITY VERIFICATION</span>
+                        <p class="priority-description">
+                            Complete identity verification with our trusted partner Quicken to unlock:
                         </p>
+                        <div class="priority-benefits">
+                            <h4>Benefits of Priority Verification:</h4>
+                            <ul>
+                                <li>✓ Fast-track your application (skip the wait list)</li>
+                                <li>✓ Access to exclusive job opportunities</li>
+                                <li>✓ Priority matching with top employers</li>
+                                <li>✓ Verified badge on your profile</li>
+                                <li>✓ 24-hour response guarantee</li>
+                            </ul>
+                        </div>
+                        <div class="priority-partner">
+                            <p><strong>Verification Partner:</strong> Quicken (Trusted Identity Verification)</p>
+                        </div>
                     </div>
+
+                    <div class="question-options verification-options">
+                        <label class="option-card priority-option">
+                            <input type="radio" name="q10" value="accelerate" required>
+                            <div class="option-content">
+                                <span class="option-title">⚡ Yes, Accelerate My Application</span>
+                                <span class="option-desc">Complete verification now (opens in new window)</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="q10" value="standard">
+                            <div class="option-content">
+                                <span class="option-title">⏳ Continue with Standard Process</span>
+                                <span class="option-desc">Regular processing (5-7 business days)</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <p class="verification-note">
+                        <small>By selecting priority verification, you'll be redirected to complete a secure identity check with Quicken. This helps us maintain the highest quality candidate pool and protect your career journey.</small>
+                    </p>
 
                     <div class="question-navigation">
-                        <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
-                        <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Complete Assessment</button>
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" onclick="submitAssessment()">Complete Assessment</button>
                     </div>
-                </form>
+                </div>
             </div>
 
-            <!-- STEP 4: Assessment Complete -->
-            <div class="assessment-complete" id="assessmentComplete" style="display: none;">
+            <!-- Completion Message -->
+            <div id="completionSection" class="assessment-complete" style="display: none;">
                 <div class="success-icon">✓</div>
                 <h2>Assessment Complete!</h2>
-                <div id="completionMessage"></div>
+                <div id="completionMessage">
+                    <!-- Dynamic message will be inserted here -->
+                </div>
                 <div class="next-steps">
                     <h3>What Happens Next?</h3>
-                    <ul>
-                        <li>Our team will review your assessment within 48 hours</li>
-                        <li>You'll receive personalized job matches via email</li>
-                        <li>A career consultant will reach out to discuss opportunities</li>
+                    <ul id="nextStepsList">
+                        <!-- Dynamic steps will be inserted here -->
                     </ul>
                 </div>
-                <a href="index.html" class="btn btn-primary">Return to Home</a>
+                <div style="margin-top: 2rem;">
+                    <a href="index.html" class="btn btn-primary">Return to Home</a>
+                </div>
             </div>
         </div>
     </section>
@@ -613,8 +563,7 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div class="footer-logo">
-                        <img src="logo.png" alt="Talent Loop Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                        <span class="logo-icon" style="display: none;">◆</span>
+                        <img src="logo.png" alt="Talent Loop Logo" class="logo-image">
                         <span class="logo-text">Talent Loop</span>
                     </div>
                     <p>Bridging the gap between talent and opportunity since 2015.</p>
@@ -647,15 +596,175 @@
                         <a href="#" aria-label="Twitter">𝕏</a>
                         <a href="#" aria-label="Facebook">f</a>
                     </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <a href="https://www.talent-loop.org" style="color: rgba(255,255,255,0.8);">www.talent-loop.org</a>
+                    </p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Talent Loop. All rights reserved.</p>
+                <p>&copy; 2025 Talent Loop. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="quiz.js"></script>
+    <script>
+        // Mobile Navigation Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Assessment Logic
+        let currentQuestionNum = 1;
+        const totalQuestions = 10;
+        const answers = {};
+
+        // Personal Info Form Submission
+        document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect personal info
+            const formData = new FormData(this);
+            for (let [key, value] of formData.entries()) {
+                answers[key] = value;
+            }
+            
+            // Hide personal info, show assessment
+            document.getElementById('personalInfoSection').style.display = 'none';
+            document.getElementById('assessmentSection').style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        });
+
+        function updateProgress() {
+            const progress = (currentQuestionNum / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionNum;
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+        }
+
+        function nextQuestion() {
+            const currentSlide = document.querySelector(`.question-slide[data-question="${currentQuestionNum}"]`);
+            const selectedOption = currentSlide.querySelector('input[type="radio"]:checked');
+            
+            if (!selectedOption) {
+                alert('Please select an option before continuing.');
+                return;
+            }
+            
+            // Save answer
+            const questionName = selectedOption.name;
+            answers[questionName] = selectedOption.value;
+            
+            // Hide current, show next
+            currentSlide.classList.remove('active');
+            currentQuestionNum++;
+            
+            const nextSlide = document.querySelector(`.question-slide[data-question="${currentQuestionNum}"]`);
+            if (nextSlide) {
+                nextSlide.classList.add('active');
+                updateProgress();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function previousQuestion() {
+            const currentSlide = document.querySelector(`.question-slide[data-question="${currentQuestionNum}"]`);
+            currentSlide.classList.remove('active');
+            
+            currentQuestionNum--;
+            
+            const prevSlide = document.querySelector(`.question-slide[data-question="${currentQuestionNum}"]`);
+            prevSlide.classList.add('active');
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function submitAssessment() {
+            const currentSlide = document.querySelector(`.question-slide[data-question="${currentQuestionNum}"]`);
+            const selectedOption = currentSlide.querySelector('input[type="radio"]:checked');
+            
+            if (!selectedOption) {
+                alert('Please select an option before completing the assessment.');
+                return;
+            }
+            
+            // Save final answer
+            answers[selectedOption.name] = selectedOption.value;
+            
+            // Check if user selected priority verification
+            if (answers.q10 === 'accelerate') {
+                // Open Quicken verification in new tab
+                window.open('https://quicken.sjv.io/OemEbP', '_blank');
+                
+                // Show completion message for priority verification
+                showCompletionMessage(true);
+            } else {
+                // Standard process
+                showCompletionMessage(false);
+            }
+        }
+
+        function showCompletionMessage(isPriority) {
+            // Hide assessment section
+            document.getElementById('assessmentSection').style.display = 'none';
+            
+            // Show completion section
+            const completionSection = document.getElementById('completionSection');
+            completionSection.style.display = 'block';
+            
+            const messageDiv = document.getElementById('completionMessage');
+            const nextStepsList = document.getElementById('nextStepsList');
+            
+            if (isPriority) {
+                messageDiv.innerHTML = `
+                    <p><strong>Thank you for choosing Priority Verification!</strong></p>
+                    <p>A new window has opened to complete your identity verification with Quicken. Please complete the verification process to unlock your priority benefits.</p>
+                    <p style="margin-top: 1.5rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 8px;">
+                        <strong>📞 Next Step:</strong> Once you complete the Quicken verification, our team will contact you within 24 hours for a phone verification call to finalize your application.
+                    </p>
+                `;
+                
+                nextStepsList.innerHTML = `
+                    <li>Complete the Quicken verification in the new window (takes 3-5 minutes)</li>
+                    <li>Receive confirmation email from Talent Loop within 1 hour</li>
+                    <li>Expect a phone call from our team within 24 hours to verify your information</li>
+                    <li>Get matched with priority opportunities within 48 hours</li>
+                    <li>Start receiving exclusive job offers tailored to your profile</li>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <p><strong>Thank you for completing the Career Assessment!</strong></p>
+                    <p>We've received your responses and our team is analyzing your profile to find the best matches for your career goals.</p>
+                `;
+                
+                nextStepsList.innerHTML = `
+                    <li>Our team will review your assessment within 5-7 business days</li>
+                    <li>You'll receive an email with personalized career recommendations</li>
+                    <li>We'll contact you when relevant opportunities match your profile</li>
+                    <li>Consider upgrading to Priority Verification for faster processing</li>
+                `;
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Optional: Send data to server
+            console.log('Assessment Data:', answers);
+            // You can add AJAX call here to send data to your backend
+        }
+
+        // Initialize progress bar
+        updateProgress();
+    </script>
 </body>
 </html>
