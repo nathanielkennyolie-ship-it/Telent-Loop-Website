@@ -3,7 +3,57 @@
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    // ================================
+    // COUNTRY & STATE DROPDOWN DATA
+    // ================================
+    const statesByCountry = {
+        'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
+        'Canada': ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon'],
+        'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
+        'Australia': ['New South Wales', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia', 'Australian Capital Territory', 'Northern Territory'],
+        'Germany': ['Baden-Württemberg', 'Bavaria', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hesse', 'Lower Saxony', 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia', 'Rhineland-Palatinate', 'Saarland', 'Saxony', 'Saxony-Anhalt', 'Schleswig-Holstein', 'Thuringia'],
+        'India': ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
+        'Mexico': ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Coahuila', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Mexico City', 'Mexico State', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'],
+        'Brazil': ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
+    };
+
     // Elements
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    
+    // Populate state dropdown based on selected country
+    if (countrySelect && stateSelect) {
+        countrySelect.addEventListener('change', function() {
+            const selectedCountry = this.value;
+            
+            // Clear existing options
+            stateSelect.innerHTML = '<option value="">Select State/Province</option>';
+            
+            if (statesByCountry[selectedCountry]) {
+                // Populate with states for selected country
+                statesByCountry[selectedCountry].forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    stateSelect.appendChild(option);
+                });
+            } else {
+                // For countries without predefined states
+                stateSelect.innerHTML = '<option value="">Enter in State field below</option>';
+                // Convert to text input for other countries
+                const textInput = document.createElement('input');
+                textInput.type = 'text';
+                textInput.id = 'state';
+                textInput.name = 'state';
+                textInput.required = true;
+                textInput.placeholder = 'Enter State/Province/Region';
+                textInput.className = stateSelect.className;
+                stateSelect.parentNode.replaceChild(textInput, stateSelect);
+            }
+        });
+    }
+
+    // Rest of quiz code
     const personalInfoForm = document.getElementById('personalInfoForm');
     const contactInfoForm = document.getElementById('contactInfoForm');
     const assessmentIntro = document.getElementById('assessmentIntro');
@@ -23,33 +73,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const answers = {};
     let contactInfo = {};
     
-    // ================================
-    // STEP 1: Handle Personal Info Form Submission
-    // ================================
+    // Handle Personal Info Form
     if (contactInfoForm) {
         contactInfoForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // Get form data
             const formData = new FormData(contactInfoForm);
             contactInfo = Object.fromEntries(formData.entries());
-            
-            console.log('Contact Info Collected:', contactInfo);
-            
-            // Hide personal info form
+            console.log('Contact Info:', contactInfo);
             personalInfoForm.style.display = 'none';
-            
-            // Show assessment intro
             assessmentIntro.style.display = 'block';
-            
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
     
-    // ================================
-    // STEP 2: Start Assessment Button
-    // ================================
+    // Start Assessment
     if (startButton) {
         startButton.addEventListener('click', function() {
             assessmentIntro.style.display = 'none';
@@ -59,26 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ================================
-    // STEP 3: Quiz Navigation
-    // ================================
+    // Quiz Navigation Functions
     function showQuestion(questionNumber) {
         const slides = document.querySelectorAll('.question-slide');
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
+        slides.forEach(slide => slide.classList.remove('active'));
         
         const currentSlide = document.querySelector(`[data-question="${questionNumber}"]`);
-        if (currentSlide) {
-            currentSlide.classList.add('active');
-        }
+        if (currentSlide) currentSlide.classList.add('active');
         
-        // Update navigation buttons
-        if (questionNumber === 1) {
-            prevBtn.style.display = 'none';
-        } else {
-            prevBtn.style.display = 'inline-block';
-        }
+        prevBtn.style.display = questionNumber === 1 ? 'none' : 'inline-block';
         
         if (questionNumber === totalQuestions) {
             nextBtn.style.display = 'none';
@@ -88,11 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.style.display = 'none';
         }
         
-        // Update progress
         currentQuestionSpan.textContent = questionNumber;
         updateProgress();
-        
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
@@ -116,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
     
-    // Next Button
+    // Navigation Buttons
     if (nextBtn) {
         nextBtn.addEventListener('click', function() {
             if (validateCurrentQuestion()) {
@@ -130,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Previous Button
     if (prevBtn) {
         prevBtn.addEventListener('click', function() {
             if (currentQuestion > 1) {
@@ -140,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-advance on selection (disabled for question 10)
+    // Auto-advance
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     radioButtons.forEach(radio => {
         radio.addEventListener('change', function() {
@@ -155,9 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ================================
-    // STEP 4: Form Submission
-    // ================================
+    // Form Submission
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -167,21 +187,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Store all answers
             const formData = new FormData(assessmentForm);
             formData.forEach((value, key) => {
                 answers[key] = value;
             });
             
-            console.log('Assessment Answers:', answers);
-            
-            // Check if user selected verification
             const verificationChoice = answers['q10'];
-            
-            // Hide the quiz
             assessmentContainer.style.display = 'none';
-            
-            // Show completion message
             assessmentComplete.style.display = 'block';
             
             const completionMessage = document.getElementById('completionMessage');
@@ -190,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 completionMessage.innerHTML = `
                     <div class="priority-badge">⚡ Priority Status Selected</div>
                     <p style="margin-top: 1rem;"><strong>Excellent choice!</strong> You've chosen to verify your identity for priority placement.</p>
-                    <p style="margin-top: 1rem;">In a real-world scenario, you would now be redirected to <strong>IdentityIQ</strong> to complete your verification process. This would give you:</p>
+                    <p style="margin-top: 1rem;">In a real-world scenario, you would now be redirected to <strong>IdentityIQ</strong> to complete your verification process.</p>
                     <ul style="text-align: left; margin: 1.5rem auto; max-width: 500px;">
                         <li>Priority placement in employer searches</li>
                         <li>Faster response times (within 24 hours)</li>
@@ -198,29 +210,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li>Dedicated account manager support</li>
                     </ul>
                     <p style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
-                        <strong>Demo Note:</strong> This is a demonstration website. In the production version, you would be automatically redirected to IdentityIQ's secure verification platform.
+                        <strong>Demo Note:</strong> This is a demonstration. In production, you would be redirected to IdentityIQ.
                     </p>
                 `;
-                
-                // In production, redirect to IdentityIQ:
-                // setTimeout(() => {
-                //     window.location.href = 'https://identityiq.com/verify?partner=talent-loop';
-                // }, 3000);
-                
             } else {
                 completionMessage.innerHTML = `
                     <p><strong>Thank you for completing the assessment!</strong></p>
-                    <p style="margin-top: 1rem;">Your responses have been recorded and our team will review your profile. You'll remain in our standard candidate pool and are eligible for all opportunities.</p>
+                    <p style="margin-top: 1rem;">Your responses have been recorded. You'll remain in our standard candidate pool.</p>
                     <p style="margin-top: 1rem; padding: 1rem; background: #d1ecf1; border-radius: 8px; border-left: 4px solid #0c5460;">
-                        <strong>Tip:</strong> You can always upgrade to priority status later by completing the verification process through your candidate dashboard.
+                        <strong>Tip:</strong> You can upgrade to priority status later through your candidate dashboard.
                     </p>
                 `;
             }
             
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Store all data
             storeAssessmentData({ contactInfo, answers });
         });
     }
@@ -233,37 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 answers: data.answers,
                 status: data.answers.q10 === 'yes-verify' ? 'priority' : 'standard'
             };
-            
             localStorage.setItem('talent_loop_assessment', JSON.stringify(assessmentData));
             console.log('Assessment data stored:', assessmentData);
         } catch (error) {
             console.error('Error storing assessment data:', error);
         }
     }
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', function(e) {
-        if (assessmentContainer.style.display === 'block') {
-            if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
-                if (validateCurrentQuestion()) {
-                    nextBtn.click();
-                }
-            } else if (e.key === 'ArrowLeft' && currentQuestion > 1) {
-                prevBtn.click();
-            } else if (e.key === 'Enter' && currentQuestion === totalQuestions) {
-                if (validateCurrentQuestion()) {
-                    submitBtn.click();
-                }
-            }
-        }
-    });
-    
-    // Prevent accidental page refresh
-    window.addEventListener('beforeunload', function(e) {
-        if (assessmentContainer.style.display === 'block' && currentQuestion > 1) {
-            e.preventDefault();
-            e.returnValue = 'You have an assessment in progress. Are you sure you want to leave?';
-            return e.returnValue;
-        }
-    });
 });
