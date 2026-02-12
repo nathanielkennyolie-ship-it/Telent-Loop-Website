@@ -3,8 +3,13 @@
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    const startButton = document.getElementById('startAssessment');
+    // Personal Information Form Elements
+    const personalInfoForm = document.getElementById('personalInfoForm');
+    const personalDetailsForm = document.getElementById('personalDetailsForm');
     const assessmentIntro = document.getElementById('assessmentIntro');
+    
+    // Assessment Elements
+    const startButton = document.getElementById('startAssessment');
     const assessmentContainer = document.getElementById('assessmentContainer');
     const assessmentComplete = document.getElementById('assessmentComplete');
     const assessmentForm = document.getElementById('assessmentForm');
@@ -18,6 +23,71 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentQuestion = 1;
     const totalQuestions = 10;
     const answers = {};
+    let personalInfo = {};
+    
+    // Handle Personal Information Form Submission
+    if (personalDetailsForm) {
+        personalDetailsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate resume upload
+            const resumeFile = document.getElementById('resumeUpload').files[0];
+            if (!resumeFile) {
+                alert('Please upload your resume to continue.');
+                return;
+            }
+            
+            // Validate file size (5MB max)
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (resumeFile.size > maxSize) {
+                alert('Resume file size must be less than 5MB. Please upload a smaller file.');
+                return;
+            }
+            
+            // Validate file type
+            const allowedTypes = ['.pdf', '.doc', '.docx'];
+            const fileName = resumeFile.name.toLowerCase();
+            const isValidType = allowedTypes.some(type => fileName.endsWith(type));
+            
+            if (!isValidType) {
+                alert('Please upload a valid resume file (PDF, DOC, or DOCX).');
+                return;
+            }
+            
+            // Collect personal information
+            const formData = new FormData(personalDetailsForm);
+            personalInfo = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                address: formData.get('address'),
+                city: formData.get('city'),
+                state: formData.get('state'),
+                country: formData.get('country'),
+                linkedinUrl: formData.get('linkedinUrl') || '',
+                agreeTerms: formData.get('agreeTerms') === 'on',
+                resumeFileName: resumeFile.name,
+                resumeFileSize: resumeFile.size,
+                resumeFileType: resumeFile.type
+            };
+            
+            // Store personal info in localStorage
+            try {
+                localStorage.setItem('talentloop_personal_info', JSON.stringify(personalInfo));
+                console.log('Personal information saved:', personalInfo);
+            } catch (error) {
+                console.error('Error saving personal information:', error);
+            }
+            
+            // Show assessment intro
+            personalInfoForm.style.display = 'none';
+            assessmentIntro.style.display = 'block';
+            
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
     
     // Start Assessment
     if (startButton) {
@@ -196,14 +266,27 @@ document.addEventListener('DOMContentLoaded', function() {
         // In production, this would send data to your backend server
         // For demo purposes, we'll store in localStorage
         try {
+            // Get personal info from localStorage
+            const storedPersonalInfo = localStorage.getItem('talentloop_personal_info');
+            const personalData = storedPersonalInfo ? JSON.parse(storedPersonalInfo) : {};
+            
             const assessmentData = {
                 timestamp: new Date().toISOString(),
-                answers: data,
+                personalInfo: personalData,
+                assessmentAnswers: data,
                 status: data.q10 === 'yes-verify' ? 'priority' : 'standard'
             };
             
             localStorage.setItem('talentloop_assessment', JSON.stringify(assessmentData));
-            console.log('Assessment data stored:', assessmentData);
+            console.log('Complete assessment data stored:', assessmentData);
+            
+            // In production, send to server:
+            // fetch('/api/submit-assessment', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(assessmentData)
+            // });
+            
         } catch (error) {
             console.error('Error storing assessment data:', error);
         }
