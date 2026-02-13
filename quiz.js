@@ -197,9 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="background: #e7f3ff; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid var(--primary-color);">
                         <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📋 What's Happening Now:</h3>
                         <ol style="text-align: left; margin-left: 1.5rem; line-height: 1.8;">
-                            <li>A new window opened with <strong>Quicken's verification platform</strong></li>
-                            <li>Complete the verification process there</li>
-                            <li>You'll receive <strong>priority status</strong> once verified</li>
+                            <li>A new window has opened with our trusted partner, <strong>Quicken®</strong>, to begin the verification process.</li>
+                            <li>To get priority status, you'll need to sign up for a <strong>free Quicken® trial</strong>—no payment is required to start.</li>
+                            <li>Once you complete the short verification on their secure platform, your priority status will be activated.</li>
                         </ol>
                     </div>
                     <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #ffc107;">
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </ul>
                     </div>
                     <p style="margin-top: 1.5rem;"><strong>Don't see the window?</strong> 
-                    <a href="${QUICKEN_URL}" target="_blank" style="color: var(--primary-color); text-decoration: underline;">Click here</a></p>
+                    <a href="${QUICKEN_URL}" target="_blank" style="color: var(--primary-color); text-decoration: underline;">Click here to continue to Quicken®</a></p>
                 `;
             } else {
                 msg.innerHTML = `
