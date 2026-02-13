@@ -29,28 +29,33 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear existing options
             stateSelect.innerHTML = '<option value="">Select State/Province</option>';
             
-            if (statesByCountry[selectedCountry]) {
-                // Populate with states for selected country
+            if (selectedCountry && statesByCountry[selectedCountry]) {
+                // Enable dropdown and populate with states for selected country
+                stateSelect.disabled = false;
                 statesByCountry[selectedCountry].forEach(state => {
                     const option = document.createElement('option');
                     option.value = state;
                     option.textContent = state;
                     stateSelect.appendChild(option);
                 });
+            } else if (selectedCountry) {
+                // For countries without predefined states, provide N/A option
+                stateSelect.disabled = false;
+                const option = document.createElement('option');
+                option.value = 'N/A';
+                option.textContent = 'N/A';
+                stateSelect.appendChild(option);
+                // Auto-select N/A for countries without state lists
+                stateSelect.value = 'N/A';
             } else {
-                // For countries without predefined states
-                stateSelect.innerHTML = '<option value="">Enter in State field below</option>';
-                // Convert to text input for other countries
-                const textInput = document.createElement('input');
-                textInput.type = 'text';
-                textInput.id = 'state';
-                textInput.name = 'state';
-                textInput.required = true;
-                textInput.placeholder = 'Enter State/Province/Region';
-                textInput.className = stateSelect.className;
-                stateSelect.parentNode.replaceChild(textInput, stateSelect);
+                // No country selected - disable state dropdown
+                stateSelect.disabled = true;
+                stateSelect.innerHTML = '<option value="">Select Country First</option>';
             }
         });
+        
+        // Initialize state dropdown as disabled
+        stateSelect.disabled = true;
     }
 
     // Rest of quiz code
@@ -207,8 +212,14 @@ document.addEventListener('DOMContentLoaded', function() {
             assessmentComplete.style.display = 'block';
             
             const completionMessage = document.getElementById('completionMessage');
+            const prioritySuccessMessage = document.getElementById('prioritySuccessMessage');
             
             if (verificationChoice === 'yes-verify') {
+                // Show the priority success message section
+                if (prioritySuccessMessage) {
+                    prioritySuccessMessage.style.display = 'block';
+                }
+                
                 // Open Quicken in NEW TAB
                 window.open(QUICKEN_VERIFICATION_URL, '_blank');
                 
@@ -243,6 +254,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 
             } else {
+                // Hide priority success message for standard users
+                if (prioritySuccessMessage) {
+                    prioritySuccessMessage.style.display = 'none';
+                }
+                
                 // Standard application message
                 completionMessage.innerHTML = `
                     <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment!</strong></p>
