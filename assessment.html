@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Assessment - Talent Loop</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="Address autocomplete · CSS">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -69,9 +70,10 @@
                     </div>
 
                     <!-- STREET ADDRESS -->
-                    <div class="form-group">
+                    <div class="form-group" style="position: relative;">
                         <label for="address">Street Address *</label>
-                        <input type="text" id="address" name="address" placeholder="123 Main Street, Apt 4B" required>
+                        <input type="text" id="address" name="address" placeholder="Start typing your address..." required autocomplete="off">
+                        <div id="addressSuggestions" class="address-suggestions"></div>
                     </div>
 
                     <!-- CITY & ZIP CODE -->
