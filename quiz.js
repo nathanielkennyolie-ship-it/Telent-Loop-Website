@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ================================
-    // STATE DROPDOWN POPULATION - FIXED
+    // STATE DROPDOWN POPULATION - COMPLETELY FIXED
     // ================================
     const countrySelect = document.getElementById('country');
     const stateSelect = document.getElementById('state');
@@ -27,16 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
         countrySelect.addEventListener('change', function() {
             const selectedCountry = this.value;
             
-            // Clear existing options
+            console.log('Country selected:', selectedCountry); // Debug
+            
+            // COMPLETELY CLEAR the state dropdown
             stateSelect.innerHTML = '';
+            stateSelect.disabled = false;
             
             if (statesByCountry[selectedCountry]) {
-                // Country has predefined states - populate dropdown
+                // Country HAS predefined states
+                console.log('Loading states for:', selectedCountry); // Debug
+                
+                // Add default option
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select State/Province';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
                 stateSelect.appendChild(defaultOption);
                 
+                // Add all states
                 statesByCountry[selectedCountry].forEach(state => {
                     const option = document.createElement('option');
                     option.value = state;
@@ -44,24 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     stateSelect.appendChild(option);
                 });
                 
-            } else if (selectedCountry && selectedCountry !== '') {
-                // Other country - allow free text input
+                console.log('States loaded:', stateSelect.options.length); // Debug
+                
+            } else if (selectedCountry && selectedCountry !== '' && selectedCountry !== 'Other') {
+                // Country selected but NO predefined states
                 const option = document.createElement('option');
                 option.value = '';
-                option.textContent = 'Enter your state/province below';
+                option.textContent = 'Enter your state/province';
+                option.selected = true;
                 stateSelect.appendChild(option);
                 
-                // Make it non-required and add instruction
-                stateSelect.removeAttribute('required');
-                
             } else {
-                // No country selected
+                // NO country selected OR "Other" selected
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select Country First';
+                defaultOption.selected = true;
                 stateSelect.appendChild(defaultOption);
+                stateSelect.disabled = true;
             }
         });
+        
+        // Trigger change event on page load if country is already selected
+        if (countrySelect.value) {
+            countrySelect.dispatchEvent(new Event('change'));
+        }
     }
 
     // ================================
@@ -217,4 +233,122 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(assessmentForm);
             formData.forEach((value, key) => {
-                answers[ke
+                answers[key] = value;
+            });
+            
+            const verificationChoice = answers['q10'];
+            
+            // Store all data first
+            storeAssessmentData({ contactInfo, answers });
+            
+            // Hide the quiz
+            assessmentContainer.style.display = 'none';
+            
+            // Show completion message
+            assessmentComplete.style.display = 'block';
+            
+            const completionMessage = document.getElementById('completionMessage');
+            
+            if (verificationChoice === 'yes-verify') {
+                // Open Quicken in NEW TAB
+                window.open(QUICKEN_VERIFICATION_URL, '_blank');
+                
+                // Show congratulatory message on current page
+                completionMessage.innerHTML = `
+                    <div class="priority-badge">⚡ Priority Status - Verification in Progress</div>
+                    <p style="margin-top: 1.5rem; font-size: 1.2rem;"><strong>Congratulations!</strong> You've taken the first step toward priority placement.</p>
+                    
+                    <div style="background: #e7f3ff; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid var(--primary-color);">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📋 What's Happening Now:</h3>
+                        <ol style="text-align: left; margin-left: 1.5rem; line-height: 1.8;">
+                            <li>A new window has opened with <strong>Quicken's verification platform</strong></li>
+                            <li>Complete the quick verification process there</li>
+                            <li>Once verified, you'll receive <strong>priority status</strong> in our system</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #ffc107;">
+                        <h3 style="color: #856404; margin-bottom: 1rem;">📞 Next Steps:</h3>
+                        <p style="color: #856404; margin-bottom: 0.5rem;">Once you've completed the Quicken verification:</p>
+                        <ul style="text-align: left; margin-left: 1.5rem; color: #856404; line-height: 1.8;">
+                            <li>Our team will be notified of your priority status</li>
+                            <li>A career consultant will <strong>contact you via phone</strong> within 24 hours</li>
+                            <li>You'll receive exclusive access to premium job opportunities</li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                        <strong>Don't see the verification window?</strong> 
+                        <a href="${QUICKEN_VERIFICATION_URL}" target="_blank" style="color: var(--primary-color); text-decoration: underline;">Click here to open it manually</a>
+                    </p>
+                `;
+                
+            } else {
+                // Standard application message
+                completionMessage.innerHTML = `
+                    <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment!</strong></p>
+                    
+                    <div style="background: #d1ecf1; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #0c5460;">
+                        <h3 style="color: #0c5460; margin-bottom: 1rem;">📋 What Happens Next:</h3>
+                        <ul style="text-align: left; margin-left: 1.5rem; color: #0c5460; line-height: 1.8;">
+                            <li>Your assessment has been saved in our standard candidate pool</li>
+                            <li>Our team will review your profile within 48 hours</li>
+                            <li>You'll receive job matches via email when suitable positions become available</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border-left: 4px solid #ffc107;">
+                        <p style="color: #856404; margin-bottom: 0;">
+                            <strong>💡 Tip:</strong> Want faster results? You can upgrade to priority status anytime through your candidate dashboard by completing the Quicken verification.
+                        </p>
+                    </div>
+                `;
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+    
+    function storeAssessmentData(data) {
+        try {
+            const assessmentData = {
+                timestamp: new Date().toISOString(),
+                contactInfo: data.contactInfo,
+                answers: data.answers,
+                status: data.answers.q10 === 'yes-verify' ? 'priority' : 'standard',
+                quickenVerificationSent: data.answers.q10 === 'yes-verify'
+            };
+            localStorage.setItem('talent_loop_assessment', JSON.stringify(assessmentData));
+            console.log('Assessment data stored:', assessmentData);
+        } catch (error) {
+            console.error('Error storing assessment data:', error);
+        }
+    }
+    
+    // ================================
+    // KEYBOARD NAVIGATION
+    // ================================
+    document.addEventListener('keydown', function(e) {
+        if (assessmentContainer && assessmentContainer.style.display === 'block') {
+            if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
+                if (validateCurrentQuestion()) {
+                    nextBtn.click();
+                }
+            } else if (e.key === 'ArrowLeft' && currentQuestion > 1) {
+                prevBtn.click();
+            }
+        }
+    });
+    
+    // ================================
+    // PREVENT ACCIDENTAL PAGE REFRESH
+    // ================================
+    window.addEventListener('beforeunload', function(e) {
+        if (assessmentContainer && assessmentContainer.style.display === 'block' && currentQuestion > 1) {
+            e.preventDefault();
+            e.returnValue = 'You have an assessment in progress. Are you sure you want to leave?';
+            return e.returnValue;
+        }
+    });
+});
