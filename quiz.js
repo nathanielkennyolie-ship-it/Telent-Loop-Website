@@ -21,16 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const countrySelect = document.getElementById('country');
     const stateSelect = document.getElementById('state');
     
+    console.log('Country select found:', countrySelect);
+    console.log('State select found:', stateSelect);
+    
     // Populate state dropdown based on selected country
     if (countrySelect && stateSelect) {
+        console.log('Setting up country change listener...');
+        
         countrySelect.addEventListener('change', function() {
             const selectedCountry = this.value;
+            console.log('Country changed to:', selectedCountry);
             
             // Clear existing options
             stateSelect.innerHTML = '<option value="">Select State/Province</option>';
             
             if (selectedCountry && statesByCountry[selectedCountry]) {
                 // Enable dropdown and populate with states for selected country
+                console.log('Populating states for:', selectedCountry);
                 stateSelect.disabled = false;
                 statesByCountry[selectedCountry].forEach(state => {
                     const option = document.createElement('option');
@@ -38,8 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     option.textContent = state;
                     stateSelect.appendChild(option);
                 });
+                console.log('Added', statesByCountry[selectedCountry].length, 'states');
             } else if (selectedCountry) {
                 // For countries without predefined states, provide N/A option
+                console.log('No states defined for:', selectedCountry, '- using N/A');
                 stateSelect.disabled = false;
                 const option = document.createElement('option');
                 option.value = 'N/A';
@@ -49,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 stateSelect.value = 'N/A';
             } else {
                 // No country selected - disable state dropdown
+                console.log('No country selected - disabling state dropdown');
                 stateSelect.disabled = true;
                 stateSelect.innerHTML = '<option value="">Select Country First</option>';
             }
@@ -56,6 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize state dropdown as disabled
         stateSelect.disabled = true;
+        console.log('State dropdown initialized as disabled');
+    } else {
+        console.error('Could not find country or state select elements!');
     }
 
     // Rest of quiz code
