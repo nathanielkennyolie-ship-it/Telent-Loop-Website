@@ -43,14 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // Navbar scroll effect
 window.addEventListener('scroll', function() {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = 'none';
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.boxShadow = 'none';
+        }
     }
 });
 
-// Animated Counter for Stats
+// ================================
+// ANIMATED COUNTER FOR STATS - FIXED
+// ================================
 function animateCounter(element, target, duration = 2000) {
     const start = 0;
     const increment = target / (duration / 16);
@@ -59,7 +63,9 @@ function animateCounter(element, target, duration = 2000) {
     const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
-            element.textContent = target.toLocaleString() + (element.textContent.includes('%') ? '%' : '');
+            // Check if this is a percentage stat
+            const isPercentage = element.closest('.stat-item').querySelector('.stat-label').textContent.includes('Rate');
+            element.textContent = target.toLocaleString() + (isPercentage ? '%' : '');
             clearInterval(timer);
         } else {
             element.textContent = Math.floor(current).toLocaleString();
@@ -69,19 +75,22 @@ function animateCounter(element, target, duration = 2000) {
 
 // Intersection Observer for Stats Animation
 const observerOptions = {
-    threshold: 0.2,
+    threshold: 0.5,
     rootMargin: '0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
+const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const statNumbers = entry.target.querySelectorAll('.stat-number');
             statNumbers.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-target'));
-                animateCounter(stat, target);
+                if (target && !isNaN(target)) {
+                    animateCounter(stat, target);
+                }
             });
-            observer.unobserve(entry.target);
+            // Unobserve after animation starts
+            statsObserver.unobserve(entry.target);
         }
     });
 }, observerOptions);
@@ -89,10 +98,12 @@ const observer = new IntersectionObserver((entries) => {
 // Observe stats section if it exists
 const statsSection = document.querySelector('.stats');
 if (statsSection) {
-    observer.observe(statsSection);
+    statsObserver.observe(statsSection);
 }
 
-// Contact Form Handling
+// ================================
+// CONTACT FORM HANDLING
+// ================================
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
@@ -122,7 +133,9 @@ if (contactForm) {
     });
 }
 
-// Smooth scroll for anchor links
+// ================================
+// SMOOTH SCROLL FOR ANCHOR LINKS
+// ================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
@@ -139,8 +152,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add fade-in animation to elements on scroll
+// ================================
+// FADE-IN ANIMATION ON SCROLL
+// ================================
 const fadeElements = document.querySelectorAll('.feature-card, .blog-card, .value-item, .team-member');
+
 const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
@@ -152,7 +168,8 @@ const fadeObserver = new IntersectionObserver((entries) => {
         }
     });
 }, {
-    threshold: 0.1
+    threshold: 0.1,
+    rootMargin: '0px'
 });
 
 fadeElements.forEach(element => {
