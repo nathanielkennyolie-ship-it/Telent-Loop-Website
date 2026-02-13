@@ -5,6 +5,86 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Quiz script loaded!'); // Debug
+
+    // ================================
+    // ADDRESS AUTOCOMPLETE
+    // ================================
+    const addressInput = document.getElementById('address');
+    const addressSuggestions = document.getElementById('addressSuggestions');
+    const cityInput = document.getElementById('city');
+    const stateSelect = document.getElementById('state');
+    const zipCodeInput = document.getElementById('zipCode');
+    const countrySelect = document.getElementById('country');
+
+    if (addressInput) {
+        addressInput.addEventListener('input', async function() {
+            const query = this.value;
+            if (query.length < 3) {
+                addressSuggestions.innerHTML = '';
+                addressSuggestions.style.display = 'none';
+                return;
+            }
+
+            // This is a mock API call. Replace with a real geocoding API like Google Places API or Geoapify.
+            const suggestions = await getMockAddressSuggestions(query);
+
+            if (suggestions.length > 0) {
+                const suggestionsHTML = suggestions.map(s => `<div class="suggestion-item" data-address='${JSON.stringify(s)}'>${s.formatted}</div>`).join('');
+                addressSuggestions.innerHTML = suggestionsHTML;
+                addressSuggestions.style.display = 'block';
+            } else {
+                addressSuggestions.innerHTML = '';
+                addressSuggestions.style.display = 'none';
+            }
+        });
+
+        addressSuggestions.addEventListener('click', function(e) {
+            if (e.target.classList.contains('suggestion-item')) {
+                const addressData = JSON.parse(e.target.getAttribute('data-address'));
+                addressInput.value = addressData.street;
+                cityInput.value = addressData.city;
+                zipCodeInput.value = addressData.postcode;
+                
+                // Set country and state
+                const countryOption = Array.from(countrySelect.options).find(option => option.text === addressData.country);
+                if (countryOption) {
+                    countrySelect.value = countryOption.value;
+                    // Trigger change event to populate states
+                    const event = new Event('change');
+                    countrySelect.dispatchEvent(event);
+                    
+                    // Set state after a short delay to allow state dropdown to populate
+                    setTimeout(() => {
+                        const stateOption = Array.from(stateSelect.options).find(option => option.text === addressData.state);
+                        if (stateOption) {
+                            stateSelect.value = stateOption.value;
+                        }
+                    }, 100);
+                }
+
+                addressSuggestions.innerHTML = '';
+                addressSuggestions.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'address') {
+                addressSuggestions.innerHTML = '';
+                addressSuggestions.style.display = 'none';
+            }
+        });
+    }
+
+    // Mock function to simulate address suggestions. Replace with a real API call.
+    async function getMockAddressSuggestions(query) {
+        const mockData = [
+            { street: '123 Main Street', city: 'New York', state: 'New York', postcode: '10001', country: 'United States', formatted: '<strong>123 Main Street</strong>, New York, NY, 10001, USA' },
+            { street: '456 Oak Avenue', city: 'Los Angeles', state: 'California', postcode: '90001', country: 'United States', formatted: '<strong>456 Oak Avenue</strong>, Los Angeles, CA, 90001, USA' },
+            { street: '789 Pine Lane', city: 'Chicago', state: 'Illinois', postcode: '60601', country: 'United States', formatted: '<strong>789 Pine Lane</strong>, Chicago, IL, 60601, USA' },
+            { street: '101 Maple Drive', city: 'Toronto', state: 'Ontario', postcode: 'M5H 2N2', country: 'Canada', formatted: '<strong>101 Maple Drive</strong>, Toronto, ON, M5H 2N2, Canada' }
+        ];
+        return mockData.filter(d => d.formatted.toLowerCase().includes(query.toLowerCase()));
+    }
     
     // ================================
     // STATE DROPDOWN - SIMPLE & WORKING
@@ -19,40 +99,25 @@ document.addEventListener('DOMContentLoaded', function() {
         'Mexico': ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Coahuila', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Mexico City', 'Mexico State', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'],
         'Brazil': ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
     };
-
-    const countrySelect = document.getElementById('country');
-    const stateSelect = document.getElementById('state');
     
     if (countrySelect && stateSelect) {
-        console.log('Country and state dropdowns found!'); // Debug
-        
         countrySelect.addEventListener('change', function() {
             const country = this.value;
-            console.log('Country changed to:', country); // Debug
-            
-            // CLEAR EVERYTHING
             stateSelect.innerHTML = '';
             
             if (statesByCountry[country]) {
-                console.log('Loading states for', country); // Debug
-                
-                // Add placeholder
                 let option = document.createElement('option');
                 option.value = '';
                 option.textContent = 'Select State/Province';
                 stateSelect.appendChild(option);
                 
-                // Add all states
                 statesByCountry[country].forEach(state => {
                     let opt = document.createElement('option');
                     opt.value = state;
                     opt.textContent = state;
                     stateSelect.appendChild(opt);
                 });
-                
-                console.log('Added', statesByCountry[country].length, 'states'); // Debug
             } else {
-                // No states for this country
                 let option = document.createElement('option');
                 option.value = '';
                 option.textContent = country ? 'Enter your state/province' : 'Select Country First';
