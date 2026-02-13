@@ -18,77 +18,48 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // ================================
-    // STATE DROPDOWN POPULATION
+    // STATE DROPDOWN POPULATION - FIXED
     // ================================
     const countrySelect = document.getElementById('country');
-    const stateSelectContainer = document.getElementById('state');
+    const stateSelect = document.getElementById('state');
     
-    if (countrySelect && stateSelectContainer) {
+    if (countrySelect && stateSelect) {
         countrySelect.addEventListener('change', function() {
             const selectedCountry = this.value;
-            const stateGroup = stateSelectContainer.closest('.form-group');
             
-            // Remove any existing input/select
-            const existingField = document.getElementById('state');
-            if (existingField) {
-                existingField.remove();
-            }
+            // Clear existing options
+            stateSelect.innerHTML = '';
             
             if (statesByCountry[selectedCountry]) {
-                // Create SELECT dropdown for countries with predefined states
-                const selectElement = document.createElement('select');
-                selectElement.id = 'state';
-                selectElement.name = 'state';
-                selectElement.required = true;
-                selectElement.className = 'form-select';
-                
-                // Add default option
+                // Country has predefined states - populate dropdown
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select State/Province';
-                selectElement.appendChild(defaultOption);
+                stateSelect.appendChild(defaultOption);
                 
-                // Add state options
                 statesByCountry[selectedCountry].forEach(state => {
                     const option = document.createElement('option');
                     option.value = state;
                     option.textContent = state;
-                    selectElement.appendChild(option);
+                    stateSelect.appendChild(option);
                 });
                 
-                // Insert after the label
-                const label = stateGroup.querySelector('label');
-                label.insertAdjacentElement('afterend', selectElement);
-                
             } else if (selectedCountry && selectedCountry !== '') {
-                // Create TEXT input for other countries
-                const inputElement = document.createElement('input');
-                inputElement.type = 'text';
-                inputElement.id = 'state';
-                inputElement.name = 'state';
-                inputElement.required = true;
-                inputElement.placeholder = 'Enter State/Province/Region';
-                inputElement.className = 'form-input';
+                // Other country - allow free text input
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Enter your state/province below';
+                stateSelect.appendChild(option);
                 
-                // Insert after the label
-                const label = stateGroup.querySelector('label');
-                label.insertAdjacentElement('afterend', inputElement);
+                // Make it non-required and add instruction
+                stateSelect.removeAttribute('required');
                 
             } else {
-                // No country selected - show default select
-                const selectElement = document.createElement('select');
-                selectElement.id = 'state';
-                selectElement.name = 'state';
-                selectElement.required = true;
-                selectElement.className = 'form-select';
-                
+                // No country selected
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select Country First';
-                selectElement.appendChild(defaultOption);
-                
-                const label = stateGroup.querySelector('label');
-                label.insertAdjacentElement('afterend', selectElement);
+                stateSelect.appendChild(defaultOption);
             }
         });
     }
@@ -211,3 +182,39 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentQuestion > 1) {
                 currentQuestion--;
                 showQuestion(currentQuestion);
+            }
+        });
+    }
+    
+    // ================================
+    // AUTO-ADVANCE ON SELECTION
+    // ================================
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function() {
+            setTimeout(() => {
+                if (currentQuestion < totalQuestions && validateCurrentQuestion()) {
+                    if (currentQuestion !== 10) {
+                        currentQuestion++;
+                        showQuestion(currentQuestion);
+                    }
+                }
+            }, 300);
+        });
+    });
+    
+    // ================================
+    // FORM SUBMISSION
+    // ================================
+    if (assessmentForm) {
+        assessmentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateCurrentQuestion()) {
+                alert('Please select an answer for the final question.');
+                return;
+            }
+            
+            const formData = new FormData(assessmentForm);
+            formData.forEach((value, key) => {
+                answers[ke
