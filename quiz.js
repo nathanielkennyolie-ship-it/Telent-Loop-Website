@@ -1,9 +1,67 @@
 // ================================
 // Talent Loop - Assessment Quiz
-// FINAL & WORKING w/ POPUP WARNING & CORRECTED MESSAGING
+// FINAL & WORKING w/ DYNAMIC DROPDOWNS & POPUP WARNING
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ================================
+    // COUNTRY & STATE DROPDOWNS
+    // ================================
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+
+    const allCountries = [
+        "United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Italy", "Spain", 
+        "Netherlands", "Belgium", "Switzerland", "Austria", "Sweden", "Norway", "Denmark", "Finland", 
+        "Ireland", "Portugal", "Greece", "Poland", "Czech Republic", "Hungary", "Romania", "Bulgaria", 
+        "Croatia", "India", "China", "Japan", "South Korea", "Singapore", "Malaysia", "Thailand", 
+        "Indonesia", "Philippines", "Vietnam", "New Zealand", "South Africa", "Nigeria", "Kenya", 
+        "Egypt", "Morocco", "Brazil", "Mexico", "Argentina", "Chile", "Colombia", "Peru", "Venezuela", 
+        "Ecuador", "United Arab Emirates", "Saudi Arabia", "Qatar", "Kuwait", "Israel", "Turkey", 
+        "Russia", "Ukraine", "Pakistan", "Bangladesh", "Other"
+    ].sort();
+
+    const statesByCountry = {
+        'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
+        'Canada': ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon'],
+        'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
+        'Australia': ['New South Wales', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia', 'Australian Capital Territory', 'Northern Territory'],
+        'Germany': ['Baden-Württemberg', 'Bavaria', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hesse', 'Lower Saxony', 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia', 'Rhineland-Palatinate', 'Saarland', 'Saxony', 'Saxony-Anhalt', 'Schleswig-Holstein', 'Thuringia'],
+        'India': ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
+        'Mexico': ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Coahuila', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Mexico City', 'Mexico State', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'],
+        'Brazil': ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
+    };
+
+    if (countrySelect) {
+        // Populate countries
+        allCountries.forEach(country => {
+            let option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            countrySelect.appendChild(option);
+        });
+
+        // Listener to populate states
+        countrySelect.addEventListener('change', function() {
+            const country = this.value;
+            stateSelect.innerHTML = '';
+            let defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            stateSelect.appendChild(defaultOption);
+            if (statesByCountry[country]) {
+                defaultOption.textContent = 'Select State/Province';
+                statesByCountry[country].forEach(state => {
+                    let opt = document.createElement('option');
+                    opt.value = state; 
+                    opt.textContent = state;
+                    stateSelect.appendChild(opt);
+                });
+            } else {
+                defaultOption.textContent = country ? 'State not applicable' : 'Select Country First';
+            }
+        });
+    }
 
     // ================================
     // ADDRESS AUTOCOMPLETE (LIVE)
@@ -11,9 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addressInput = document.getElementById('address');
     const addressSuggestions = document.getElementById('addressSuggestions');
     const cityInput = document.getElementById('city');
-    const stateSelect = document.getElementById('state');
     const zipCodeInput = document.getElementById('zipCode');
-    const countrySelect = document.getElementById('country');
 
     async function getRealAddressSuggestions(query) {
         const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`;
@@ -23,17 +79,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             return data.map(item => {
                 const addr = item.address;
-                const houseNumber = addr.house_number || '';
-                const street = addr.road || '';
-                const city = addr.city || addr.town || addr.village || '';
-                const state = addr.state || '';
-                const postcode = addr.postcode || '';
-                const country = addr.country || '';
-                const fullStreet = `${houseNumber} ${street}`.trim();
-                let display_parts = [fullStreet, city, state, postcode].filter(Boolean).join(', ');
                 return {
-                    street: fullStreet, city: city, state: state,
-                    postcode: postcode, country: country, formatted: display_parts
+                    street: `${addr.house_number || ''} ${addr.road || ''}`.trim(),
+                    city: addr.city || addr.town || addr.village || '',
+                    state: addr.state || '',
+                    postcode: addr.postcode || '',
+                    country: addr.country || '',
+                    formatted: item.display_name
                 };
             });
         } catch (error) {
@@ -44,22 +96,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (addressInput) {
         addressInput.addEventListener('input', async function() {
-            const query = this.value;
-            if (query.length < 3) {
-                addressSuggestions.innerHTML = '';
+            if (this.value.length < 3) {
                 addressSuggestions.style.display = 'none';
                 return;
             }
-            const suggestions = await getRealAddressSuggestions(query);
+            const suggestions = await getRealAddressSuggestions(this.value);
             if (suggestions.length > 0) {
-                const suggestionsHTML = suggestions.map(s => {
+                addressSuggestions.innerHTML = suggestions.map(s => {
                     const addressData = JSON.stringify(s).replace(/"/g, '&quot;');
                     return `<div class="suggestion-item" data-address='${addressData}'>${s.formatted}</div>`;
                 }).join('');
-                addressSuggestions.innerHTML = suggestionsHTML;
                 addressSuggestions.style.display = 'block';
             } else {
-                addressSuggestions.innerHTML = '';
                 addressSuggestions.style.display = 'none';
             }
         });
@@ -71,59 +119,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 addressInput.value = addressData.street;
                 cityInput.value = addressData.city;
                 zipCodeInput.value = addressData.postcode;
-                const countryOption = Array.from(countrySelect.options).find(option => option.text === addressData.country);
+                
+                const countryOption = Array.from(countrySelect.options).find(opt => opt.text === addressData.country);
                 if (countryOption) {
                     countrySelect.value = countryOption.value;
-                    countrySelect.dispatchEvent(new Event('change'));
+                    countrySelect.dispatchEvent(new Event('change')); // Trigger state dropdown update
                     setTimeout(() => {
-                        const stateOption = Array.from(stateSelect.options).find(option => option.value === addressData.state || option.text === addressData.state);
+                        const stateOption = Array.from(stateSelect.options).find(opt => opt.value === addressData.state || opt.text === addressData.state);
                         if (stateOption) stateSelect.value = stateOption.value;
-                    }, 100);
+                    }, 100); // Delay to allow states to populate
                 }
-                addressSuggestions.innerHTML = '';
                 addressSuggestions.style.display = 'none';
             }
         });
 
-        document.addEventListener('click', function(e) {
-            if (e.target.id !== 'address') {
-                addressSuggestions.innerHTML = '';
-                addressSuggestions.style.display = 'none';
-            }
-        });
-    }
-
-    // ================================
-    // STATE DROPDOWN
-    // ================================
-    const statesByCountry = {
-        'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
-        'Canada': ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon'],
-        'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
-        'Australia': ['New South Wales', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia', 'Australian Capital Territory', 'Northern Territory'],
-        'Germany': ['Baden-Württemberg', 'Bavaria', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hesse', 'Lower Saxony', 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia', 'Rhineland-Palatinate', 'Saarland', 'Saxony', 'Saxony-Anhalt', 'Schleswig-Holstein', 'Thuringia'],
-        'India': ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
-        'Mexico': ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Coahuila', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Mexico City', 'Mexico State', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'],
-        'Brazil': ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
-    };
-    
-    if (countrySelect && stateSelect) {
-        countrySelect.addEventListener('change', function() {
-            const country = this.value;
-            stateSelect.innerHTML = '';
-            let defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            stateSelect.appendChild(defaultOption);
-            if (statesByCountry[country]) {
-                defaultOption.textContent = 'Select State/Province';
-                statesByCountry[country].forEach(state => {
-                    let opt = document.createElement('option');
-                    opt.value = state; opt.textContent = state;
-                    stateSelect.appendChild(opt);
-                });
-            } else {
-                defaultOption.textContent = country ? 'Enter your state/province' : 'Select Country First';
-            }
+        document.addEventListener('click', e => {
+            if (e.target.id !== 'address') addressSuggestions.style.display = 'none';
         });
     }
 
@@ -145,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const standardWarning = document.getElementById('standardApplicationWarning');
     
     let currentQuestion = 1;
-    const totalQuestions = 10;
+    const totalQuestions = 10; // Make sure this matches the number of question slides
     const answers = {};
     let contactInfo = {};
     const QUICKEN_URL = 'https://quicken.sjv.io/OemEbP';
@@ -171,18 +182,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function showQuestion(num) {
         document.querySelectorAll('.question-slide').forEach(s => s.classList.remove('active'));
-        document.querySelector(`[data-question="${num}"]`).classList.add('active');
+        const slide = document.querySelector(`[data-question="${num}"]`);
+        if(slide) slide.classList.add('active');
+        
         prevBtn.style.display = num === 1 ? 'none' : 'inline-block';
         nextBtn.style.display = num === totalQuestions ? 'none' : 'inline-block';
         submitBtn.style.display = num === totalQuestions ? 'inline-block' : 'none';
-        currentQuestionSpan.textContent = num;
-        if (standardWarning) standardWarning.style.display = 'none'; // Hide warning by default
+        if(currentQuestionSpan) currentQuestionSpan.textContent = num;
+        if (standardWarning) standardWarning.style.display = 'none';
         updateProgress();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
     function updateProgress() {
-        progressFill.style.width = (currentQuestion / totalQuestions * 100) + '%';
+        if(progressFill) progressFill.style.width = (currentQuestion / totalQuestions * 100) + '%';
     }
     
     function validateQuestion() {
@@ -200,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
+        nextBtn.addEventListener('click', () => {
             if (validateQuestion()) {
                 currentQuestion++;
                 showQuestion(currentQuestion);
@@ -209,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
+        prevBtn.addEventListener('click', () => {
             currentQuestion--;
             showQuestion(currentQuestion);
         });
@@ -217,18 +230,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('input[name="q10"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            if (this.value === 'no-standard') {
-                if (standardWarning) standardWarning.style.display = 'block';
-            } else {
-                if (standardWarning) standardWarning.style.display = 'none';
-            }
+            if (standardWarning) standardWarning.style.display = (this.value === 'no-standard') ? 'block' : 'none';
         });
     });
 
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         const questionNumber = parseInt(radio.closest('.question-slide').dataset.question, 10);
         if (questionNumber < 10) {
-            radio.addEventListener('change', function() {
+            radio.addEventListener('change', () => {
                 setTimeout(() => {
                     if (validateQuestion()) {
                         currentQuestion++;
