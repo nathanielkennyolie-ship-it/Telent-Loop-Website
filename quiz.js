@@ -44,18 +44,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ================================
     function populateStates(country) {
         if (!stateSelect) return;
-
         const states = statesByCountry[country];
-        stateSelect.innerHTML = ''; // Clear existing options
-        stateSelect.disabled = true; // Disable until populated
-
+        stateSelect.innerHTML = '';
+        stateSelect.disabled = true;
         if (states) {
             stateSelect.disabled = false;
             let placeholder = document.createElement('option');
             placeholder.value = '';
             placeholder.textContent = 'Select State/Province';
             stateSelect.appendChild(placeholder);
-
             states.forEach(state => {
                 let opt = document.createElement('option');
                 opt.value = state;
@@ -72,22 +69,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function initializeDropdowns() {
         if (!countrySelect) return;
-        
-        // Populate Countries
         const countries = Object.keys(statesByCountry);
-        countrySelect.innerHTML = ''; // Clear existing
+        countrySelect.innerHTML = '';
         countries.forEach(country => {
             let option = document.createElement('option');
             option.value = country;
             option.textContent = country;
             countrySelect.appendChild(option);
         });
-
-        // Set default to United States and populate states
         countrySelect.value = "United States";
         populateStates("United States");
-
-        // Add event listener for changes
         countrySelect.addEventListener('change', function() {
             populateStates(this.value);
         });
@@ -103,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) throw new Error('Network error');
             const data = await response.json();
             const usData = data.filter(item => item.address && item.address.country_code === 'us');
-
             return usData.map(item => {
                 const addr = item.address;
                 const fullStreet = `${addr.house_number || ''} ${addr.road || ''}`.trim();
@@ -147,14 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 cityInput.value = addr.city;
                 zipCodeInput.value = addr.postcode;
                 countrySelect.value = "United States";
-                populateStates("United States"); // Ensure states are populated
+                populateStates("United States");
                 stateSelect.value = addr.state;
                 addressSuggestions.style.display = 'none';
             }
         });
 
         document.addEventListener('click', (e) => {
-            if (!addressInput.contains(e.target)) addressSuggestions.style.display = 'none';
+            if (addressSuggestions && !addressInput.contains(e.target)) addressSuggestions.style.display = 'none';
         });
     }
 
@@ -193,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateProgress() {
-        if (progressFill) progressFill.style.width = ((currentQuestion - 1) / totalQuestions * 100) + '%';
+        if (progressFill) progressFill.style.width = ((currentQuestion) / totalQuestions * 100) + '%';
     }
 
     function validateQuestion(questionNumber) {
@@ -206,6 +196,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return isAnswered;
     }
+    
+    // Re-add event listener for auto-advancing
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const currentSlide = radio.closest('.question-slide');
+            const questionNumber = parseInt(currentSlide.dataset.question, 10);
+            if (questionNumber < totalQuestions) {
+                setTimeout(() => {
+                    if (validateQuestion(questionNumber)) {
+                        currentQuestion++;
+                        showQuestion(currentQuestion);
+                    }
+                }, 300);
+            }
+        });
+    });
 
     if (nextBtn) {
         nextBtn.addEventListener('click', function() {
@@ -247,14 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (answers.q10 === 'yes-verify') {
                 window.open(QUICKEN_URL, '_blank');
                 msg.innerHTML = `
-                    <div class="priority-badge">⚡ Priority Status - Verification in Progress</div>
-                    <p style="margin-top: 1.5rem; font-size: 1.2rem;"><strong>Congratulations!</strong> You've taken the first step toward priority placement.</p>
+                    <div class="priority-badge">⚡ Priority Status Activated!</div>
+                    <p style="margin-top: 1.5rem; font-size: 1.2rem;"><strong>Congratulations!</strong> Your profile has been placed in the priority queue.</p>
                     <div style="background: #e7f3ff; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid var(--primary-color);">
                         <h3 style="color: var(--primary-color); margin-bottom: 1rem;">📋 What's Happening Now:</h3>
                         <ol style="text-align: left; margin-left: 1.5rem; line-height: 1.8;">
-                            <li>A new window has opened with our trusted partner, <strong>Quicken®</strong>, to begin the verification process.</li>
-                            <li>To get priority status, you'll need to sign up for a <strong>free Quicken® trial</strong>—no payment is required to start.</li>
-                            <li>Once you complete the short verification on their secure platform, your priority status will be activated.</li>
+                            <li>A new window has opened with our trusted partner, <strong>Quicken®</strong>, for verification.</li>
+                            <li>Complete the simple sign-up for a <strong>free Quicken® trial</strong> to finalize your priority status.</li>
+                            <li>Once verification is complete, expect an email from our team with priority matches within <strong>24 hours.</strong></li>
                         </ol>
                     </div>
                     <p style="margin-top: 1.5rem;"><strong>Don't see the window?</strong> 
@@ -266,9 +272,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="background: #d1ecf1; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #0c5460;">
                         <h3 style="color: #0c5460; margin-bottom: 1rem;">📋 What Happens Next:</h3>
                         <ul style="text-align: left; margin-left: 1.5rem; color: #0c5460; line-height: 1.8;">
-                            <li>Your assessment is saved in our candidate pool</li>
-                            <li>Our team will review your profile within 48 hours</li>
-                            <li>You'll get job matches via email</li>
+                            <li>Your assessment has been saved in our standard candidate pool.</li>
+                            <li>Our team will review your profile and you will be contacted via email with any potential matches within <strong>7-10 business days.</strong></li>
                         </ul>
                     </div>
                 `;
