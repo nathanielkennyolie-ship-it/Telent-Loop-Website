@@ -1,6 +1,5 @@
 // ================================
-// Talent Loop - Assessment Quiz
-// FINAL & WORKING w/ DYNAMIC DROPDOWNS & POPUP WARNING
+// Talent Loop - Assessment Quiz (Complete & Stable)
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     if (countrySelect) {
-        // Populate countries
         allCountries.forEach(country => {
             let option = document.createElement('option');
             option.value = country;
@@ -42,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
             countrySelect.appendChild(option);
         });
 
-        // Listener to populate states
         countrySelect.addEventListener('change', function() {
             const country = this.value;
             stateSelect.innerHTML = '';
@@ -123,11 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const countryOption = Array.from(countrySelect.options).find(opt => opt.text === addressData.country);
                 if (countryOption) {
                     countrySelect.value = countryOption.value;
-                    countrySelect.dispatchEvent(new Event('change')); // Trigger state dropdown update
+                    countrySelect.dispatchEvent(new Event('change'));
                     setTimeout(() => {
                         const stateOption = Array.from(stateSelect.options).find(opt => opt.value === addressData.state || opt.text === addressData.state);
                         if (stateOption) stateSelect.value = stateOption.value;
-                    }, 100); // Delay to allow states to populate
+                    }, 100);
                 }
                 addressSuggestions.style.display = 'none';
             }
@@ -142,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ASSESSMENT FORM LOGIC
     // ================================
     const personalInfoForm = document.getElementById('personalInfoForm');
-    const contactInfoForm = document.getElementById('contactInfoForm');
     const assessmentIntro = document.getElementById('assessmentIntro');
     const startButton = document.getElementById('startAssessment');
     const assessmentContainer = document.getElementById('assessmentContainer');
@@ -156,16 +152,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const standardWarning = document.getElementById('standardApplicationWarning');
     
     let currentQuestion = 1;
-    const totalQuestions = 10; // Make sure this matches the number of question slides
+    const totalQuestions = 10;
     const answers = {};
     let contactInfo = {};
     const QUICKEN_URL = 'https://quicken.sjv.io/OemEbP';
     
-    if (contactInfoForm) {
-        contactInfoForm.addEventListener('submit', function(e) {
+    if (personalInfoForm) {
+        personalInfoForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            contactInfo = Object.fromEntries(new FormData(contactInfoForm).entries());
-            personalInfoForm.style.display = 'none';
+            contactInfo = Object.fromEntries(new FormData(this).entries());
+            this.style.display = 'none';
             assessmentIntro.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -175,8 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startButton.addEventListener('click', function() {
             assessmentIntro.style.display = 'none';
             assessmentContainer.style.display = 'block';
-            updateProgress();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showQuestion(1);
         });
     }
     
@@ -202,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const slide = document.querySelector(`[data-question="${currentQuestion}"]`);
         const radios = slide.querySelectorAll('input[type="radio"]');
         let valid = false;
+        if (!radios.length) return true; // No validation needed for slides without radios
         radios.forEach(r => {
             if (r.checked) {
                 valid = true;
