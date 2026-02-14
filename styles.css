@@ -1,10 +1,9 @@
 /* ================================
-// Talent Loop - Step 2: CRITICAL LAYOUT RESTORATION
+// Talent Loop - Step 3: FORM CENTERING FIX
 // =============================== */
 
-/* Base body styles from previous step */
 body {
-    background-color: #f0f0f0; /* Light Gray */
+    background-color: #f0f0f0;
     font-family: sans-serif;
     margin: 0;
     line-height: 1.6;
@@ -12,26 +11,18 @@ body {
 
 :root {
     --primary-color: #007bff;
+    --text-dark: #212529;
+    --border-color: #dee2e6;
 }
 
 /* ================================
-// 1. FIX THE GIANT LOGO & CENTER CONTENT
+// LAYOUT & NAVBAR (from previous step)
 // =============================== */
-
-.logo-image {
-    height: 40px; /* <--- This will fix the logo size */
-}
-
 .container {
     max-width: 1100px;
-    margin: 0 auto; /* <--- This will center the page content */
+    margin: 0 auto;
     padding: 0 1.5rem;
 }
-
-
-/* ================================
-// 2. RESTORE THE NAVIGATION BAR
-// =============================== */
 
 .navbar {
     background-color: #ffffff;
@@ -43,18 +34,16 @@ body {
 }
 
 .nav-container {
-    display: flex; /* Arrange items horizontally */
-    justify-content: space-between; /* Space out logo and menu */
-    align-items: center; /* Vertically align items */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
 
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+.logo-image { height: 40px; }
+.logo-text { font-size: 1.5rem; font-weight: 700; }
 
 .nav-menu {
     list-style: none;
@@ -63,12 +52,7 @@ body {
     margin: 0;
     padding: 0;
 }
-
-.nav-menu a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 600;
-}
+.nav-menu a { text-decoration: none; color: #333; font-weight: 600; }
 
 .cta-link {
     background-color: var(--primary-color);
@@ -77,13 +61,11 @@ body {
     border-radius: 8px;
 }
 
-.hamburger { display: none; } /* Hide hamburger on desktop for now */
-
+.hamburger { display: none; }
 
 /* ================================
-// 3. BASIC FORM & SECTION STYLING
+// *** CENTERING FIX FOR FORM SECTIONS ***
 // =============================== */
-
 .assessment-section {
     padding: 2rem 0;
 }
@@ -96,23 +78,32 @@ body {
     padding: 3rem;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    /* FIX: Explicitly set max-width and margin to center the form itself */
+    max-width: 800px;
     margin: 2rem auto;
 }
 
+/* ================================
+// GENERAL STYLING (from previous step)
+// =============================== */
 h1, h2, h3, h4 {
-    color: #333;
+    font-family: 'Playfair Display', serif; /* Adding back the correct font */
+    color: var(--text-dark);
 }
 
-.page-title { font-size: 2rem; text-align: center; margin-bottom: 1rem; }
-.intro-text { text-align: center; color: #666; margin-bottom: 2rem; }
+.page-title { font-size: 2.5rem; text-align: center; margin-bottom: 1rem; }
+.intro-text { text-align: center; font-size: 1.1rem; color: #6c757d; margin-bottom: 2.5rem; }
 
+.form-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; }
+.form-group { flex: 1; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
 .form-group input, .form-group select {
     box-sizing: border-box;
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
+    font-size: 1rem;
 }
 
 .btn {
@@ -128,4 +119,9 @@ h1, h2, h3, h4 {
 .btn-primary {
     background-color: var(--primary-color);
     color: #fff;
+}
+
+/* Add responsive rule for form rows */
+@media (max-width: 768px) {
+    .form-row { flex-direction: column; gap: 1rem; margin-bottom: 1rem; }
 }
