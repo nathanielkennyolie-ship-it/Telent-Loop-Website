@@ -1,13 +1,12 @@
 // ================================
 // Talent Loop - Assessment Quiz
-// FINAL & WORKING w/ LIVE ADDRESSES
+// FINAL & WORKING w/ LIVE ADDRESSES & UPDATED MESSAGING
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
 
     // ================================
     // ADDRESS AUTOCOMPLETE (LIVE)
-    // Using Nominatim (Free, No API Key)
     // ================================
     const addressInput = document.getElementById('address');
     const addressSuggestions = document.getElementById('addressSuggestions');
@@ -16,18 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const zipCodeInput = document.getElementById('zipCode');
     const countrySelect = document.getElementById('country');
 
-    // Function to fetch real address suggestions from Nominatim
     async function getRealAddressSuggestions(query) {
         const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`;
-
         try {
             const response = await fetch(url, { headers: { 'User-Agent': 'TalentLoopApp/1.0' } });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-
-            // Map the API response to the format expected by the application
             return data.map(item => {
                 const addr = item.address;
                 const houseNumber = addr.house_number || '';
@@ -36,25 +29,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const state = addr.state || '';
                 const postcode = addr.postcode || '';
                 const country = addr.country || '';
-
                 const fullStreet = `${houseNumber} ${street}`.trim();
-                
-                // Create a formatted string for display in the dropdown
                 let display_parts = [fullStreet, city, state, postcode].filter(Boolean).join(', ');
-
                 return {
-                    street: fullStreet,
-                    city: city,
-                    state: state,
-                    postcode: postcode,
-                    country: country,
-                    formatted: display_parts // This is used for the dropdown display
+                    street: fullStreet, city: city, state: state,
+                    postcode: postcode, country: country, formatted: display_parts
                 };
             });
-
         } catch (error) {
             console.error('Error fetching address suggestions:', error);
-            return []; // Return empty array on error
+            return [];
         }
     }
 
@@ -66,13 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 addressSuggestions.style.display = 'none';
                 return;
             }
-
-            // CALL THE REAL API
             const suggestions = await getRealAddressSuggestions(query);
-
             if (suggestions.length > 0) {
                 const suggestionsHTML = suggestions.map(s => {
-                    // Sanitize the JSON data for the attribute
                     const addressData = JSON.stringify(s).replace(/"/g, '&quot;');
                     return `<div class="suggestion-item" data-address='${addressData}'>${s.formatted}</div>`;
                 }).join('');
@@ -85,33 +65,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         addressSuggestions.addEventListener('click', function(e) {
-            let target = e.target;
-            // Handle clicks on child elements within the suggestion item
-            if (!target.classList.contains('suggestion-item')) {
-                target = target.closest('.suggestion-item');
-            }
-            
+            let target = e.target.closest('.suggestion-item');
             if (target) {
                 const addressData = JSON.parse(target.getAttribute('data-address'));
-                
                 addressInput.value = addressData.street;
                 cityInput.value = addressData.city;
                 zipCodeInput.value = addressData.postcode;
-                
                 const countryOption = Array.from(countrySelect.options).find(option => option.text === addressData.country);
                 if (countryOption) {
                     countrySelect.value = countryOption.value;
-                    const event = new Event('change');
-                    countrySelect.dispatchEvent(event);
-                    
+                    countrySelect.dispatchEvent(new Event('change'));
                     setTimeout(() => {
                         const stateOption = Array.from(stateSelect.options).find(option => option.value === addressData.state || option.text === addressData.state);
-                        if (stateOption) {
-                            stateSelect.value = stateOption.value;
-                        }
+                        if (stateOption) stateSelect.value = stateOption.value;
                     }, 100);
                 }
-
                 addressSuggestions.innerHTML = '';
                 addressSuggestions.style.display = 'none';
             }
@@ -143,24 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
         countrySelect.addEventListener('change', function() {
             const country = this.value;
             stateSelect.innerHTML = '';
-            
+            let defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            stateSelect.appendChild(defaultOption);
             if (statesByCountry[country]) {
-                let option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'Select State/Province';
-                stateSelect.appendChild(option);
-                
+                defaultOption.textContent = 'Select State/Province';
                 statesByCountry[country].forEach(state => {
                     let opt = document.createElement('option');
-                    opt.value = state;
-                    opt.textContent = state;
+                    opt.value = state; opt.textContent = state;
                     stateSelect.appendChild(opt);
                 });
             } else {
-                let option = document.createElement('option');
-                option.value = '';
-                option.textContent = country ? 'Enter your state/province' : 'Select Country First';
-                stateSelect.appendChild(option);
+                defaultOption.textContent = country ? 'Enter your state/province' : 'Select Country First';
             }
         });
     }
@@ -190,8 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactInfoForm) {
         contactInfoForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(contactInfoForm);
-            contactInfo = Object.fromEntries(formData.entries());
+            contactInfo = Object.fromEntries(new FormData(contactInfoForm).entries());
             personalInfoForm.style.display = 'none';
             assessmentIntro.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -232,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 answers[`q${currentQuestion}`] = r.value;
             }
         });
+        if (!valid) alert('Please select an answer.');
         return valid;
     }
     
@@ -240,8 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (validateQuestion()) {
                 currentQuestion++;
                 showQuestion(currentQuestion);
-            } else {
-                alert('Please select an answer.');
             }
         });
     }
@@ -255,9 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            // Auto-advance only on quiz questions, not the final verification question
-            const currentSlide = radio.closest('.question-slide');
-            const questionNumber = parseInt(currentSlide.dataset.question, 10);
+            const questionNumber = parseInt(radio.closest('.question-slide').dataset.question, 10);
             if (questionNumber < totalQuestions) {
                 setTimeout(() => {
                     if (validateQuestion()) {
@@ -272,10 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            if (!validateQuestion()) {
-                alert('Please select an answer.');
-                return;
-            }
+            if (!validateQuestion()) return;
             
             const formData = new FormData(assessmentForm);
             formData.forEach((v, k) => { answers[k] = v; });
@@ -311,12 +266,18 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 msg.innerHTML = `
                     <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment!</strong></p>
+                    <div style="background: #fff3cd; border-left: 4px solid #ffeeba; border-radius: 8px; padding: 2rem; margin: 2rem 0;">
+                        <h3 style="color: #856404; margin-bottom: 1rem;">Please Note: You've Chosen the Standard Application</h3>
+                        <p style="color: #856404; line-height: 1.6; margin-bottom: 0;">
+                            Standard applications are placed in our general candidate pool. Priority candidates who verify with Quicken® are reviewed first and get exclusive access to our best opportunities.
+                        </p>
+                    </div>
                     <div style="background: #d1ecf1; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #0c5460;">
                         <h3 style="color: #0c5460; margin-bottom: 1rem;">📋 What Happens Next:</h3>
                         <ul style="text-align: left; margin-left: 1.5rem; color: #0c5460; line-height: 1.8;">
-                            <li>Your assessment is saved in our candidate pool</li>
-                            <li>Our team will review your profile within 48 hours</li>
-                            <li>You'll get job matches via email</li>
+                            <li>Your assessment has been added to our waiting list.</li>
+                            <li>Our team will review your profile in <strong>7-10 business days</strong>.</li>
+                            <li>You will receive job matches via email as suitable opportunities become available.</li>
                         </ul>
                     </div>
                 `;
