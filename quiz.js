@@ -1,13 +1,12 @@
 // ================================
 // Talent Loop - Assessment Quiz
-// FINAL & WORKING w/ LIVE ADDRESSES
+// FINAL & WORKING w/ US-ONLY ADDRESSES
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
 
     // ================================
-    // ADDRESS AUTOCOMPLETE (LIVE)
-    // Using Nominatim (Free, No API Key)
+    // ADDRESS AUTOCOMPLETE (LIVE & US-ONLY)
     // ================================
     const addressInput = document.getElementById('address');
     const addressSuggestions = document.getElementById('addressSuggestions');
@@ -16,9 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const zipCodeInput = document.getElementById('zipCode');
     const countrySelect = document.getElementById('country');
 
-    // Function to fetch real address suggestions from Nominatim
     async function getRealAddressSuggestions(query) {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`;
+        // Updated URL to prioritize and restrict search to the United States
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5&countrycodes=us`;
 
         try {
             const response = await fetch(url, { headers: { 'User-Agent': 'TalentLoopApp/1.0' } });
@@ -27,19 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const data = await response.json();
 
-            // Map the API response to the format expected by the application
-            return data.map(item => {
+            // Client-side filter to ensure we only show US results
+            const usData = data.filter(item => item.address && item.address.country_code === 'us');
+
+            return usData.map(item => {
                 const addr = item.address;
                 const houseNumber = addr.house_number || '';
                 const street = addr.road || '';
                 const city = addr.city || addr.town || addr.village || '';
                 const state = addr.state || '';
                 const postcode = addr.postcode || '';
-                const country = addr.country || '';
 
                 const fullStreet = `${houseNumber} ${street}`.trim();
-                
-                // Create a formatted string for display in the dropdown
                 let display_parts = [fullStreet, city, state, postcode].filter(Boolean).join(', ');
 
                 return {
@@ -47,14 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     city: city,
                     state: state,
                     postcode: postcode,
-                    country: country,
-                    formatted: display_parts // This is used for the dropdown display
+                    country: "United States", // Hardcode to US
+                    formatted: display_parts
                 };
             });
 
         } catch (error) {
             console.error('Error fetching address suggestions:', error);
-            return []; // Return empty array on error
+            return [];
         }
     }
 
@@ -66,31 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 addressSuggestions.style.display = 'none';
                 return;
             }
-
-            // CALL THE REAL API
             const suggestions = await getRealAddressSuggestions(query);
-
             if (suggestions.length > 0) {
                 const suggestionsHTML = suggestions.map(s => {
-                    // Sanitize the JSON data for the attribute
                     const addressData = JSON.stringify(s).replace(/"/g, '&quot;');
                     return `<div class="suggestion-item" data-address='${addressData}'>${s.formatted}</div>`;
                 }).join('');
                 addressSuggestions.innerHTML = suggestionsHTML;
                 addressSuggestions.style.display = 'block';
             } else {
-                addressSuggestions.innerHTML = '';
                 addressSuggestions.style.display = 'none';
             }
         });
 
         addressSuggestions.addEventListener('click', function(e) {
-            let target = e.target;
-            // Handle clicks on child elements within the suggestion item
-            if (!target.classList.contains('suggestion-item')) {
-                target = target.closest('.suggestion-item');
-            }
-            
+            let target = e.target.closest('.suggestion-item');
             if (target) {
                 const addressData = JSON.parse(target.getAttribute('data-address'));
                 
@@ -98,72 +86,74 @@ document.addEventListener('DOMContentLoaded', function() {
                 cityInput.value = addressData.city;
                 zipCodeInput.value = addressData.postcode;
                 
-                const countryOption = Array.from(countrySelect.options).find(option => option.text === addressData.country);
-                if (countryOption) {
-                    countrySelect.value = countryOption.value;
-                    const event = new Event('change');
-                    countrySelect.dispatchEvent(event);
-                    
-                    setTimeout(() => {
-                        const stateOption = Array.from(stateSelect.options).find(option => option.value === addressData.state || option.text === addressData.state);
-                        if (stateOption) {
-                            stateSelect.value = stateOption.value;
-                        }
-                    }, 100);
-                }
+                // Set country and state dropdowns
+                countrySelect.value = "United States";
+                const event = new Event('change');
+                countrySelect.dispatchEvent(event);
+                
+                setTimeout(() => {
+                    stateSelect.value = addressData.state;
+                }, 50); // Small delay to ensure state options are populated
 
-                addressSuggestions.innerHTML = '';
                 addressSuggestions.style.display = 'none';
             }
         });
 
         document.addEventListener('click', function(e) {
-            if (e.target.id !== 'address') {
-                addressSuggestions.innerHTML = '';
+            if (!addressInput.contains(e.target)) {
                 addressSuggestions.style.display = 'none';
             }
         });
     }
 
     // ================================
-    // STATE DROPDOWN
+    // COUNTRY & STATE DROPDOWN (US-ONLY)
     // ================================
     const statesByCountry = {
-        'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
-        'Canada': ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan', 'Yukon'],
-        'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
-        'Australia': ['New South Wales', 'Queensland', 'South Australia', 'Tasmania', 'Victoria', 'Western Australia', 'Australian Capital Territory', 'Northern Territory'],
-        'Germany': ['Baden-Württemberg', 'Bavaria', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hesse', 'Lower Saxony', 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia', 'Rhineland-Palatinate', 'Saarland', 'Saxony', 'Saxony-Anhalt', 'Schleswig-Holstein', 'Thuringia'],
-        'India': ['Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
-        'Mexico': ['Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas', 'Chihuahua', 'Coahuila', 'Colima', 'Durango', 'Guanajuato', 'Guerrero', 'Hidalgo', 'Jalisco', 'Mexico City', 'Mexico State', 'Michoacán', 'Morelos', 'Nayarit', 'Nuevo León', 'Oaxaca', 'Puebla', 'Querétaro', 'Quintana Roo', 'San Luis Potosí', 'Sinaloa', 'Sonora', 'Tabasco', 'Tamaulipas', 'Tlaxcala', 'Veracruz', 'Yucatán', 'Zacatecas'],
-        'Brazil': ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
+        'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming']
     };
+
+    function populateCountries() {
+        if (!countrySelect) return;
+        const countries = Object.keys(statesByCountry);
+        countries.forEach(country => {
+            let option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            countrySelect.appendChild(option);
+        });
+        // Set default to United States
+        countrySelect.value = "United States"; 
+        // Trigger change to populate states
+        countrySelect.dispatchEvent(new Event('change')); 
+    }
     
     if (countrySelect && stateSelect) {
         countrySelect.addEventListener('change', function() {
             const country = this.value;
-            stateSelect.innerHTML = '';
-            
-            if (statesByCountry[country]) {
+            // Always enable the state select
+            stateSelect.disabled = false;
+            stateSelect.innerHTML = ''; 
+
+            const states = statesByCountry[country];
+            if (states) {
                 let option = document.createElement('option');
                 option.value = '';
                 option.textContent = 'Select State/Province';
                 stateSelect.appendChild(option);
                 
-                statesByCountry[country].forEach(state => {
+                states.forEach(state => {
                     let opt = document.createElement('option');
                     opt.value = state;
                     opt.textContent = state;
                     stateSelect.appendChild(opt);
                 });
-            } else {
-                let option = document.createElement('option');
-                option.value = '';
-                option.textContent = country ? 'Enter your state/province' : 'Select Country First';
-                stateSelect.appendChild(option);
             }
         });
     }
+
+    // Initialize country dropdown on page load
+    populateCountries();
 
     // ================================
     // ASSESSMENT FORM LOGIC
@@ -202,29 +192,33 @@ document.addEventListener('DOMContentLoaded', function() {
         startButton.addEventListener('click', function() {
             assessmentIntro.style.display = 'none';
             assessmentContainer.style.display = 'block';
-            updateProgress();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showQuestion(1);
         });
     }
     
     function showQuestion(num) {
         document.querySelectorAll('.question-slide').forEach(s => s.classList.remove('active'));
-        document.querySelector(`[data-question="${num}"]`).classList.add('active');
+        const slide = document.querySelector(`[data-question="${num}"]`);
+        if(slide) slide.classList.add('active');
+        
         prevBtn.style.display = num === 1 ? 'none' : 'inline-block';
         nextBtn.style.display = num === totalQuestions ? 'none' : 'inline-block';
         submitBtn.style.display = num === totalQuestions ? 'inline-block' : 'none';
-        currentQuestionSpan.textContent = num;
+        if(currentQuestionSpan) currentQuestionSpan.textContent = num;
         updateProgress();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
     function updateProgress() {
-        progressFill.style.width = (currentQuestion / totalQuestions * 100) + '%';
+        if(progressFill) progressFill.style.width = ((currentQuestion -1) / totalQuestions * 100) + '%';
     }
     
     function validateQuestion() {
         const slide = document.querySelector(`[data-question="${currentQuestion}"]`);
+        if(!slide) return true; // No slide, no validation needed
         const radios = slide.querySelectorAll('input[type="radio"]');
+        if(radios.length === 0) return true; // No radios, no validation needed
+
         let valid = false;
         radios.forEach(r => {
             if (r.checked) {
@@ -255,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            // Auto-advance only on quiz questions, not the final verification question
             const currentSlide = radio.closest('.question-slide');
             const questionNumber = parseInt(currentSlide.dataset.question, 10);
             if (questionNumber < totalQuestions) {
