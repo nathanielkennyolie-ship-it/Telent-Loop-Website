@@ -36,13 +36,9 @@
     <section class="assessment-section">
         <div class="container">
             
-            <!-- =============================================== -->
-            <!-- STEP 1: PERSONAL INFORMATION FORM -->
-            <!-- =============================================== -->
             <div class="personal-info-form" id="personalInfoForm">
                 <h1 class="page-title">Let's Get Started</h1>
                 <p class="intro-text">Please provide your contact information before beginning the assessment.</p>
-                
                 <form id="contactInfoForm" class="contact-info-form">
                     <div class="form-row">
                         <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
@@ -62,47 +58,160 @@
                         <div class="form-group"><label for="zipCode">ZIP/Postal Code *</label><input type="text" id="zipCode" name="zipCode" placeholder="10001" required></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required><option value="">Select Country</option></select></div>
-                        <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required><option value="">Select Country First</option></select></div>
+                        <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required></select></div>
+                        <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required disabled><option value="">Select Country First</option></select></div>
                     </div>
-                    <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"><small style="display: block; margin-top: 0.5rem; color: var(--text-light);">Accepted formats: PDF, DOC, DOCX (Max 5MB)</small></div>
+                    <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"><small>Accepted formats: PDF, DOC, DOCX (Max 5MB)</small></div>
                     <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
                 </form>
             </div>
 
-            <!-- =============================================== -->
-            <!-- STEP 2: ASSESSMENT INTRO -->
-            <!-- =============================================== -->
             <div class="assessment-intro" id="assessmentIntro" style="display: none;">
                 <h1 class="page-title">Career Assessment</h1>
-                <p class="intro-text">Welcome to the Talent Loop Career Assessment! This comprehensive evaluation will help us understand your skills, experience, and career goals to match you with the perfect opportunities.</p>
-                <div class="assessment-benefits">...</div>
+                <p class="intro-text">This comprehensive evaluation will help us understand your skills, experience, and career goals to match you with the perfect opportunities.</p>
+                <div class="assessment-benefits">
+                    <div class="benefit-item"><div class="benefit-icon">1</div><div class="benefit-text"><h3>Personalized Matches</h3><p>Get job recommendations tailored to you.</p></div></div>
+                    <div class="benefit-item"><div class="benefit-icon">2</div><div class="benefit-text"><h3>Understand Your Strengths</h3><p>Identify your key skills and areas for growth.</p></div></div>
+                    <div class="benefit-item"><div class="benefit-icon">3</div><div class="benefit-text"><h3>Fast-Track Your Search</h3><p>Our data helps recruiters find you faster.</p></div></div>
+                </div>
                 <button class="btn btn-primary btn-large" id="startAssessment">Start Assessment</button>
             </div>
 
-            <!-- =============================================== -->
-            <!-- STEP 3: ASSESSMENT QUIZ (10 QUESTIONS) -->
-            <!-- =============================================== -->
             <div class="assessment-container" id="assessmentContainer" style="display: none;">
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-                <div class="progress-text"><span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
+                <p class="progress-text">Question <span id="currentQuestion">1</span> of 10</p>
+                
                 <form id="assessmentForm">
-                    <!-- Questions 1-9 will be populated by quiz.js -->
+                    <!-- Question 1 -->
+                    <div class="question-slide" data-question="1">
+                        <h2 class="question-title">Which statement best describes your current job search status?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q1" value="active" required><span class="option-content"><span class="option-title">Actively Looking</span><span class="option-desc">I am actively applying and interviewing for a new role.</span></span></label>
+                            <label class="option-card"><input type="radio" name="q1" value="passive"><span class="option-content"><span class="option-title">Passively Browsing</span><span class="option-desc">I am open to new opportunities but not actively searching.</span></span></label>
+                            <label class="option-card"><input type="radio" name="q1" value="employed"><span class="option-content"><span class="option-title">Employed & Satisfied</span><span class="option-desc">I am happy in my current role but like to keep my options open.</span></span></label>
+                            <label class="option-card"><input type="radio" name="q1" value="student"><span class="option-content"><span class="option-title">Student / Just Graduated</span><span class="option-desc">I am looking to start my career.</span></span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-slide" data-question="2">
+                        <h2 class="question-title">How many years of professional experience do you have in your primary field?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q2" value="0-2" required><span class="option-content"><span class="option-title">0-2 Years</span></span></label>
+                            <label class="option-card"><input type="radio" name="q2" value="3-5"><span class="option-content"><span class="option-title">3-5 Years</span></span></label>
+                            <label class="option-card"><input type="radio" name="q2" value="6-10"><span class="option-content"><span class="option-title">6-10 Years</span></span></label>
+                            <label class="option-card"><input type="radio" name="q2" value="10+"><span class="option-content"><span class="option-title">10+ Years</span></span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-slide" data-question="3">
+                        <h2 class="question-title">Which industry are you most interested in?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q3" value="tech" required><span class="option-content"><span class="option-title">Technology & IT</span></span></label>
+                            <label class="option-card"><input type="radio" name="q3" value="healthcare"><span class="option-content"><span class="option-title">Healthcare & Medical</span></span></label>
+                            <label class="option-card"><input type="radio" name="q3" value="finance"><span class="option-content"><span class="option-title">Finance & Accounting</span></span></label>
+                            <label class="option-card"><input type="radio" name="q3" value="creative"><span class="option-content"><span class="option-title">Creative & Marketing</span></span></label>
+                             <label class="option-card"><input type="radio" name="q3" value="other"><span class="option-content"><span class="option-title">Other</span></span></label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div class="question-slide" data-question="4">
+                        <h2 class="question-title">What is your ideal work environment?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q4" value="remote" required><span class="option-content"><span class="option-title">Fully Remote</span><span class="option-desc">I want to work from home full-time.</span></span></label>
+                            <label class="option-card"><input type="radio" name="q4" value="hybrid"><span class="option-content"><span class="option-title">Hybrid</span><span class="option-desc">A mix of in-office and remote work.</span></span></label>
+                            <label class="option-card"><input type="radio" name="q4" value="in-office"><span class="option-content"><span class="option-title">In-Office</span><span class="option-desc">I prefer working at a company office.</span></span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-slide" data-question="5">
+                        <h2 class="question-title">What is your desired job level?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q5" value="entry" required><span class="option-content"><span class="option-title">Entry-Level / Intern</span></span></label>
+                            <label class="option-card"><input type="radio" name="q5" value="mid"><span class="option-content"><span class="option-title">Mid-Level</span></span></label>
+                            <label class="option-card"><input type="radio" name="q5" value="senior"><span class="option-content"><span class="option-title">Senior / Lead</span></span></label>
+                            <label class="option-card"><input type="radio" name="q5" value="executive"><span class="option-content"><span class="option-title">Manager / Executive</span></span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-slide" data-question="6">
+                        <h2 class="question-title">What is your target annual salary (USD)?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q6" value="<60k" required><span class="option-content"><span class="option-title">Under $60,000</span></span></label>
+                            <label class="option-card"><input type="radio" name="q6" value="60-90k"><span class="option-content"><span class="option-title">$60,000 - $90,000</span></span></label>
+                            <label class="option-card"><input type="radio" name="q6" value="90-120k"><span class="option-content"><span class="option-title">$90,000 - $120,000</span></span></label>
+                            <label class="option-card"><input type="radio" name="q6" value="120k+"><span class="option-content"><span class="option-title">Over $120,000</span></span></label>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 7 -->
+                     <div class="question-slide" data-question="7">
+                        <h2 class="question-title">How soon are you looking to start a new position?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q7" value="immediately" required><span class="option-content"><span class="option-title">Immediately</span></span></label>
+                            <label class="option-card"><input type="radio" name="q7" value="1-2_weeks"><span class="option-content"><span class="option-title">In 1-2 weeks</span></span></label>
+                            <label class="option-card"><input type="radio" name="q7" value="1_month"><span class="option-content"><span class="option-title">In the next month</span></span></label>
+                             <label class="option-card"><input type="radio" name="q7" value="flexible"><span class="option-content"><span class="option-title">Flexible timeline</span></span></label>
+                        </div>
+                    </div>
+                    
+                     <!-- Question 8 -->
+                     <div class="question-slide" data-question="8">
+                        <h2 class="question-title">Are you open to relocating?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q8" value="yes" required><span class="option-content"><span class="option-title">Yes, anywhere</span></span></label>
+                            <label class="option-card"><input type="radio" name="q8" value="yes_specific"><span class="option-content"><span class="option-title">Yes, to specific locations</span></span></label>
+                            <label class="option-card"><input type="radio" name="q8" value="no"><span class="option-content"><span class="option-title">No, I want to stay in my current area</span></span></label>
+                        </div>
+                    </div>
+
+                    <!-- Question 9 -->
+                    <div class="question-slide" data-question="9">
+                        <h2 class="question-title">How did you hear about Talent Loop?</h2>
+                        <div class="question-options">
+                            <label class="option-card"><input type="radio" name="q9" value="social" required><span class="option-content"><span class="option-title">Social Media (LinkedIn, Facebook, etc.)</span></span></label>
+                            <label class="option-card"><input type="radio" name="q9" value="search"><span class="option-content"><span class="option-title">Search Engine (Google, Bing, etc.)</span></span></label>
+                            <label class="option-card"><input type="radio" name="q9" value="referral"><span class="option-content"><span class="option-title">Friend or Colleague</span></span></label>
+                            <label class="option-card"><input type="radio" name="q9" value="other"><span class="option-content"><span class="option-title">Other</span></span></label>
+                        </div>
+                    </div>
                     
                     <!-- Question 10 - Priority Verification -->
                     <div class="question-slide" data-question="10">
                         <h2 class="question-title">Fast-Track Your Application with Priority Verification</h2>
-                        <div class="priority-info">...</div>
-                        <div class="question-options verification-options">
-                            <label class="option-card priority-option"><input type="radio" name="q10" value="yes-verify" required><span class="option-content">...</span></label>
-                            <label class="option-card"><input type="radio" name="q10" value="no-standard" required><span class="option-content">...</span></label>
+                        <div class="priority-info">
+                            <div class="priority-badge">⚡ Optional: Get Seen First</div>
+                            <p class="priority-description">Our system matches thousands of candidates to jobs daily. <strong>Priority Verification</strong> places your profile at the top of the queue for our recruiters and partner companies.</p>
+                            <div class="priority-benefits">
+                                <h4>Benefits include:</h4>
+                                <ul>
+                                    <li>✔ Top placement in recruiter searches</li>
+                                    <li>✔ 5x faster response times</li>
+                                    <li>✔ Direct matching with hiring managers</li>
+                                </ul>
+                            </div>
+                            <p class="verification-note">This service is managed by our trusted financial partner to ensure secure identity verification.</p>
                         </div>
-                        <!-- DYNAMIC WARNING POPUP - Will be displayed here by quiz.js -->
-                        <div id="standardApplicationWarning" style="display: none; background: #fff3cd; border-left: 4px solid #ffeeba; border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem;">
-                            <h4 style="color: #856404; margin-bottom: 0.5rem;">Please Note:</h4>
-                            <p style="color: #856404; line-height: 1.6; margin-bottom: 0;">
-                                Standard applications are placed in our general candidate pool and reviewed in <strong>7-10 business days</strong>. Priority candidates are reviewed first.
-                            </p>
+                        <h3 style="margin: 2rem 0 1.5rem; text-align:center;">Would you like to fast-track your application?</h3>
+                        <div class="question-options verification-options">
+                            <label class="option-card priority-option">
+                                <input type="radio" name="q10" value="yes-verify" required>
+                                <span class="option-content">
+                                    <span class="option-title">Yes, verify me for Priority Status</span>
+                                    <span class="option-desc">Continue to our partner for secure verification. This gives you top placement and a 5x faster response time.</span>
+                                </span>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="q10" value="no-standard">
+                                <span class="option-content">
+                                    <span class="option-title">No, I'll use the standard application</span>
+                                    <span class="option-desc">Your application will be processed in the standard queue (typically 7-10 business days for review).</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
 
@@ -114,23 +223,48 @@
                 </form>
             </div>
 
-            <!-- =============================================== -->
-            <!-- STEP 4: ASSESSMENT COMPLETE -->
-            <!-- =============================================== -->
             <div class="assessment-complete" id="assessmentComplete" style="display: none;">
                 <div class="success-icon">✓</div>
                 <h2>Assessment Complete!</h2>
-                <!-- The completion message is now FULLY controlled by quiz.js -->
                 <div id="completionMessage"></div>
-                <!-- The old, duplicate 'next-steps' div has been PERMANENTLY REMOVED -->
-                <a href="index.html" class="btn btn-primary">Return to Home</a>
+                <a href="index.html" class="btn btn-primary" style="margin-top: 2rem;">Return to Home</a>
             </div>
         </div>
     </section>
 
-    <footer class="footer">...</footer>
+    <footer class="footer">
+         <div class="container footer-grid">
+            <div class="footer-col">
+                <div class="footer-logo logo"><img src="logo.png" alt="Talent Loop Logo" class="logo-image"> Talent Loop</div>
+                <p>Connecting talent with opportunity.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="legal.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p>info@talentloop.com</p>
+                <p>123 Main Street, New York, NY</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Talent Loop. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <!-- JavaScript Files -->
     <script src="script.js"></script>
     <script src="quiz.js"></script>
 </body>
