@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         const questionNumber = parseInt(radio.closest('.question-slide').dataset.question, 10);
-        if (questionNumber < 10) { // All questions except the last one
+        if (questionNumber < 10) {
             radio.addEventListener('change', function() {
                 setTimeout(() => {
                     if (validateQuestion()) {
