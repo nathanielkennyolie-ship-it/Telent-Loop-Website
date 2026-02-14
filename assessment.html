@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Assessment - Talent Loop</title>
-    <link rel="stylesheet" href="styles.css?v=2.0"> <!-- Cache Busting -->
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="address_autocomplete.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="logo.png" alt="Talent Loop Logo" class="logo-image">
+                <img src="logo.png" alt="Talent Loop Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <span class="logo-icon" style="display: none;">◆</span>
                 <span class="logo-text">Talent Loop</span>
             </div>
             <ul class="nav-menu" id="navMenu">
@@ -36,67 +36,101 @@
     <section class="assessment-section">
         <div class="container">
             
+            <!-- =============================================== -->
             <!-- STEP 1: PERSONAL INFORMATION FORM -->
-            <form class="personal-info-form" id="personalInfoForm">
+            <!-- =============================================== -->
+            <div class="personal-info-form" id="personalInfoForm">
                 <h1 class="page-title">Let's Get Started</h1>
-                <p class="intro-text">Please provide your contact information to begin.</p>
-                <div class="form-row">
-                    <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
-                    <div class="form-group"><label for="lastName">Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Doe" required></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" placeholder="john.doe@example.com" required></div>
-                    <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required></div>
-                </div>
-                <div class="form-group" style="position: relative;">
-                    <label for="address">Street Address *</label>
-                    <input type="text" id="address" name="address" placeholder="Start typing your address..." required autocomplete="off">
-                    <div id="addressSuggestions" class="address-suggestions"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="city">City *</label><input type="text" id="city" name="city" placeholder="New York" required></div>
-                    <div class="form-group"><label for="zipCode">ZIP/Postal Code *</label><input type="text" id="zipCode" name="zipCode" placeholder="10001" required></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required><option value="">Select Country</option></select></div>
-                    <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required disabled><option value="">Select Country First</option></select></div>
-                </div>
-                <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"></div>
-                <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
-            </form>
-
-            <!-- STEP 2: ASSESSMENT INTRO -->
-            <div class="assessment-intro" id="assessmentIntro" style="display: none;">
-                <h1 class="page-title">Career Assessment</h1>
-                <p class="intro-text">This evaluation will help us match you with the perfect opportunities.</p>
-                <button class="btn btn-primary btn-large" id="startAssessment">Start Assessment</button>
-            </div>
-
-            <!-- STEP 3: ASSESSMENT QUIZ -->
-            <div class="assessment-container" id="assessmentContainer" style="display: none;">
-                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-                <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
-                <form id="assessmentForm">
-                    <!-- Questions will be dynamically shown by quiz.js -->
+                <p class="intro-text">Please provide your contact information before beginning the assessment.</p>
+                
+                <form id="contactInfoForm" class="contact-info-form">
+                    <div class="form-row">
+                        <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
+                        <div class="form-group"><label for="lastName">Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Doe" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" placeholder="john.doe@example.com" required></div>
+                        <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required></div>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label for="address">Street Address *</label>
+                        <input type="text" id="address" name="address" placeholder="Start typing your address..." required autocomplete="off">
+                        <div id="addressSuggestions" class="address-suggestions"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="city">City *</label><input type="text" id="city" name="city" placeholder="New York" required></div>
+                        <div class="form-group"><label for="zipCode">ZIP/Postal Code *</label><input type="text" id="zipCode" name="zipCode" placeholder="10001" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required><option value="">Select Country</option></select></div>
+                        <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required><option value="">Select Country First</option></select></div>
+                    </div>
+                    <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"><small style="display: block; margin-top: 0.5rem; color: var(--text-light);">Accepted formats: PDF, DOC, DOCX (Max 5MB)</small></div>
+                    <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
                 </form>
             </div>
 
+            <!-- =============================================== -->
+            <!-- STEP 2: ASSESSMENT INTRO -->
+            <!-- =============================================== -->
+            <div class="assessment-intro" id="assessmentIntro" style="display: none;">
+                <h1 class="page-title">Career Assessment</h1>
+                <p class="intro-text">Welcome to the Talent Loop Career Assessment! This comprehensive evaluation will help us understand your skills, experience, and career goals to match you with the perfect opportunities.</p>
+                <div class="assessment-benefits">...</div>
+                <button class="btn btn-primary btn-large" id="startAssessment">Start Assessment</button>
+            </div>
+
+            <!-- =============================================== -->
+            <!-- STEP 3: ASSESSMENT QUIZ (10 QUESTIONS) -->
+            <!-- =============================================== -->
+            <div class="assessment-container" id="assessmentContainer" style="display: none;">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text"><span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
+                <form id="assessmentForm">
+                    <!-- Questions 1-9 will be populated by quiz.js -->
+                    
+                    <!-- Question 10 - Priority Verification -->
+                    <div class="question-slide" data-question="10">
+                        <h2 class="question-title">Fast-Track Your Application with Priority Verification</h2>
+                        <div class="priority-info">...</div>
+                        <div class="question-options verification-options">
+                            <label class="option-card priority-option"><input type="radio" name="q10" value="yes-verify" required><span class="option-content">...</span></label>
+                            <label class="option-card"><input type="radio" name="q10" value="no-standard" required><span class="option-content">...</span></label>
+                        </div>
+                        <!-- DYNAMIC WARNING POPUP - Will be displayed here by quiz.js -->
+                        <div id="standardApplicationWarning" style="display: none; background: #fff3cd; border-left: 4px solid #ffeeba; border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem;">
+                            <h4 style="color: #856404; margin-bottom: 0.5rem;">Please Note:</h4>
+                            <p style="color: #856404; line-height: 1.6; margin-bottom: 0;">
+                                Standard applications are placed in our general candidate pool and reviewed in <strong>7-10 business days</strong>. Priority candidates are reviewed first.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="question-navigation">
+                        <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">← Previous</button>
+                        <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Complete Assessment</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- =============================================== -->
             <!-- STEP 4: ASSESSMENT COMPLETE -->
+            <!-- =============================================== -->
             <div class="assessment-complete" id="assessmentComplete" style="display: none;">
                 <div class="success-icon">✓</div>
                 <h2>Assessment Complete!</h2>
+                <!-- The completion message is now FULLY controlled by quiz.js -->
                 <div id="completionMessage"></div>
-                <a href="index.html" class="btn btn-primary" style="margin-top: 2rem;">Return to Home</a>
+                <!-- The old, duplicate 'next-steps' div has been PERMANENTLY REMOVED -->
+                <a href="index.html" class="btn btn-primary">Return to Home</a>
             </div>
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 Talent Loop. All rights reserved.</p>
-        </div>
-    </footer>
+    <footer class="footer">...</footer>
 
+    <!-- JavaScript Files -->
     <script src="script.js"></script>
     <script src="quiz.js"></script>
 </body>
