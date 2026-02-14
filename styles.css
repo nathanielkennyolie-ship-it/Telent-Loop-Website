@@ -1,5 +1,5 @@
 /* ================================
-// Talent Loop - Main Stylesheet (Complete & Repaired)
+// Talent Loop - Main Stylesheet (Reverted)
 // =============================== */
 
 /* ===============================
@@ -26,29 +26,11 @@ body {
     background-color: var(--background-light);
     margin: 0;
     line-height: 1.6;
-}
-
-/* ===============================
-// VIDEO BACKGROUND
-// =============================== */
-#background-video {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    z-index: -100;
-    object-fit: cover;
-}
-
-.video-overlay {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    z-index: -99;
-    background: rgba(255, 230, 230, 0.85);
+    /* Re-add a fallback background if needed */
+    background-image: url('path/to/your/original/corporate-image.jpg'); /*<-- Restore your original image here */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 /* ===============================
