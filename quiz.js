@@ -1,13 +1,13 @@
 // ================================
 // Talent Loop - Assessment Quiz
-// FRESH START - GUARANTEED WORKING
+// FINAL & WORKING w/ LIVE ADDRESSES
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Quiz script loaded!'); // Debug
 
     // ================================
-    // ADDRESS AUTOCOMPLETE
+    // ADDRESS AUTOCOMPLETE (LIVE)
+    // Using Nominatim (Free, No API Key)
     // ================================
     const addressInput = document.getElementById('address');
     const addressSuggestions = document.getElementById('addressSuggestions');
@@ -15,6 +15,48 @@ document.addEventListener('DOMContentLoaded', function() {
     const stateSelect = document.getElementById('state');
     const zipCodeInput = document.getElementById('zipCode');
     const countrySelect = document.getElementById('country');
+
+    // Function to fetch real address suggestions from Nominatim
+    async function getRealAddressSuggestions(query) {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5`;
+
+        try {
+            const response = await fetch(url, { headers: { 'User-Agent': 'TalentLoopApp/1.0' } });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+
+            // Map the API response to the format expected by the application
+            return data.map(item => {
+                const addr = item.address;
+                const houseNumber = addr.house_number || '';
+                const street = addr.road || '';
+                const city = addr.city || addr.town || addr.village || '';
+                const state = addr.state || '';
+                const postcode = addr.postcode || '';
+                const country = addr.country || '';
+
+                const fullStreet = `${houseNumber} ${street}`.trim();
+                
+                // Create a formatted string for display in the dropdown
+                let display_parts = [fullStreet, city, state, postcode].filter(Boolean).join(', ');
+
+                return {
+                    street: fullStreet,
+                    city: city,
+                    state: state,
+                    postcode: postcode,
+                    country: country,
+                    formatted: display_parts // This is used for the dropdown display
+                };
+            });
+
+        } catch (error) {
+            console.error('Error fetching address suggestions:', error);
+            return []; // Return empty array on error
+        }
+    }
 
     if (addressInput) {
         addressInput.addEventListener('input', async function() {
@@ -25,11 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // This is a mock API call. Replace with a real geocoding API like Google Places API or Geoapify.
-            const suggestions = await getMockAddressSuggestions(query);
+            // CALL THE REAL API
+            const suggestions = await getRealAddressSuggestions(query);
 
             if (suggestions.length > 0) {
-                const suggestionsHTML = suggestions.map(s => `<div class="suggestion-item" data-address='${JSON.stringify(s)}'>${s.formatted}</div>`).join('');
+                const suggestionsHTML = suggestions.map(s => {
+                    // Sanitize the JSON data for the attribute
+                    const addressData = JSON.stringify(s).replace(/"/g, '&quot;');
+                    return `<div class="suggestion-item" data-address='${addressData}'>${s.formatted}</div>`;
+                }).join('');
                 addressSuggestions.innerHTML = suggestionsHTML;
                 addressSuggestions.style.display = 'block';
             } else {
@@ -39,23 +85,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         addressSuggestions.addEventListener('click', function(e) {
-            if (e.target.classList.contains('suggestion-item')) {
-                const addressData = JSON.parse(e.target.getAttribute('data-address'));
+            let target = e.target;
+            // Handle clicks on child elements within the suggestion item
+            if (!target.classList.contains('suggestion-item')) {
+                target = target.closest('.suggestion-item');
+            }
+            
+            if (target) {
+                const addressData = JSON.parse(target.getAttribute('data-address'));
+                
                 addressInput.value = addressData.street;
                 cityInput.value = addressData.city;
                 zipCodeInput.value = addressData.postcode;
                 
-                // Set country and state
                 const countryOption = Array.from(countrySelect.options).find(option => option.text === addressData.country);
                 if (countryOption) {
                     countrySelect.value = countryOption.value;
-                    // Trigger change event to populate states
                     const event = new Event('change');
                     countrySelect.dispatchEvent(event);
                     
-                    // Set state after a short delay to allow state dropdown to populate
                     setTimeout(() => {
-                        const stateOption = Array.from(stateSelect.options).find(option => option.text === addressData.state);
+                        const stateOption = Array.from(stateSelect.options).find(option => option.value === addressData.state || option.text === addressData.state);
                         if (stateOption) {
                             stateSelect.value = stateOption.value;
                         }
@@ -75,19 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Mock function to simulate address suggestions. Replace with a real API call.
-    async function getMockAddressSuggestions(query) {
-        const mockData = [
-            { street: '123 Main Street', city: 'New York', state: 'New York', postcode: '10001', country: 'United States', formatted: '<strong>123 Main Street</strong>, New York, NY, 10001, USA' },
-            { street: '456 Oak Avenue', city: 'Los Angeles', state: 'California', postcode: '90001', country: 'United States', formatted: '<strong>456 Oak Avenue</strong>, Los Angeles, CA, 90001, USA' },
-            { street: '789 Pine Lane', city: 'Chicago', state: 'Illinois', postcode: '60601', country: 'United States', formatted: '<strong>789 Pine Lane</strong>, Chicago, IL, 60601, USA' },
-            { street: '101 Maple Drive', city: 'Toronto', state: 'Ontario', postcode: 'M5H 2N2', country: 'Canada', formatted: '<strong>101 Maple Drive</strong>, Toronto, ON, M5H 2N2, Canada' }
-        ];
-        return mockData.filter(d => d.formatted.toLowerCase().includes(query.toLowerCase()));
-    }
-    
     // ================================
-    // STATE DROPDOWN - SIMPLE & WORKING
+    // STATE DROPDOWN
     // ================================
     const statesByCountry = {
         'United States': ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'],
@@ -127,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ================================
-    // ASSESSMENT FORM
+    // ASSESSMENT FORM LOGIC
     // ================================
     const personalInfoForm = document.getElementById('personalInfoForm');
     const contactInfoForm = document.getElementById('contactInfoForm');
@@ -148,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let contactInfo = {};
     const QUICKEN_URL = 'https://quicken.sjv.io/OemEbP';
     
-    // Handle personal info form
     if (contactInfoForm) {
         contactInfoForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -160,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Start assessment
     if (startButton) {
         startButton.addEventListener('click', function() {
             assessmentIntro.style.display = 'none';
@@ -216,10 +253,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Auto-advance
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            if (currentQuestion < totalQuestions && currentQuestion !== 10) {
+            // Auto-advance only on quiz questions, not the final verification question
+            const currentSlide = radio.closest('.question-slide');
+            const questionNumber = parseInt(currentSlide.dataset.question, 10);
+            if (questionNumber < totalQuestions) {
                 setTimeout(() => {
                     if (validateQuestion()) {
                         currentQuestion++;
@@ -230,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Submit
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -266,14 +304,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             <li>To get priority status, you'll need to sign up for a <strong>free Quicken® trial</strong>—no payment is required to start.</li>
                             <li>Once you complete the short verification on their secure platform, your priority status will be activated.</li>
                         </ol>
-                    </div>
-                    <div style="background: #fff3cd; padding: 1.5rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #ffc107;">
-                        <h3 style="color: #856404; margin-bottom: 1rem;">📞 Next Steps:</h3>
-                        <ul style="text-align: left; margin-left: 1.5rem; color: #856404; line-height: 1.8;">
-                            <li>Our team will be notified of your priority status</li>
-                            <li>A career consultant will <strong>contact you via phone</strong> within 24 hours</li>
-                            <li>You'll get exclusive access to premium opportunities</li>
-                        </ul>
                     </div>
                     <p style="margin-top: 1.5rem;"><strong>Don't see the window?</strong> 
                     <a href="${QUICKEN_URL}" target="_blank" style="color: var(--primary-color); text-decoration: underline;">Click here to continue to Quicken®</a></p>
