@@ -1,6 +1,6 @@
 // ================================
 // Talent Loop - Assessment Quiz
-// FINAL & WORKING w/ LIVE ADDRESSES & UPDATED MESSAGING
+// FINAL & WORKING w/ POPUP WARNING & CORRECTED MESSAGING
 // ================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const progressFill = document.getElementById('progressFill');
     const currentQuestionSpan = document.getElementById('currentQuestion');
+    const standardWarning = document.getElementById('standardApplicationWarning');
     
     let currentQuestion = 1;
     const totalQuestions = 10;
@@ -175,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nextBtn.style.display = num === totalQuestions ? 'none' : 'inline-block';
         submitBtn.style.display = num === totalQuestions ? 'inline-block' : 'none';
         currentQuestionSpan.textContent = num;
+        if (standardWarning) standardWarning.style.display = 'none'; // Hide warning by default
         updateProgress();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -213,27 +215,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    document.querySelectorAll('input[name="q10"]').forEach(radio => {
         radio.addEventListener('change', function() {
-            const questionNumber = parseInt(radio.closest('.question-slide').dataset.question, 10);
-            if (questionNumber < totalQuestions) {
+            if (this.value === 'no-standard') {
+                if (standardWarning) standardWarning.style.display = 'block';
+            } else {
+                if (standardWarning) standardWarning.style.display = 'none';
+            }
+        });
+    });
+
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        const questionNumber = parseInt(radio.closest('.question-slide').dataset.question, 10);
+        if (questionNumber < 10) { // All questions except the last one
+            radio.addEventListener('change', function() {
                 setTimeout(() => {
                     if (validateQuestion()) {
                         currentQuestion++;
                         showQuestion(currentQuestion);
                     }
                 }, 300);
-            }
-        });
+            });
+        }
     });
     
     if (assessmentForm) {
         assessmentForm.addEventListener('submit', function(e) {
             e.preventDefault();
             if (!validateQuestion()) return;
-            
-            const formData = new FormData(assessmentForm);
-            formData.forEach((v, k) => { answers[k] = v; });
             
             localStorage.setItem('talent_loop_assessment', JSON.stringify({
                 timestamp: new Date().toISOString(),
@@ -265,17 +274,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             } else {
                 msg.innerHTML = `
-                    <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment!</strong></p>
-                    <div style="background: #fff3cd; border-left: 4px solid #ffeeba; border-radius: 8px; padding: 2rem; margin: 2rem 0;">
-                        <h3 style="color: #856404; margin-bottom: 1rem;">Please Note: You've Chosen the Standard Application</h3>
-                        <p style="color: #856404; line-height: 1.6; margin-bottom: 0;">
-                            Standard applications are placed in our general candidate pool. Priority candidates who verify with Quicken® are reviewed first and get exclusive access to our best opportunities.
-                        </p>
-                    </div>
+                    <p style="font-size: 1.2rem;"><strong>Thank you for completing the assessment.</strong></p>
                     <div style="background: #d1ecf1; padding: 2rem; border-radius: 12px; margin: 2rem 0; border-left: 4px solid #0c5460;">
                         <h3 style="color: #0c5460; margin-bottom: 1rem;">📋 What Happens Next:</h3>
                         <ul style="text-align: left; margin-left: 1.5rem; color: #0c5460; line-height: 1.8;">
-                            <li>Your assessment has been added to our waiting list.</li>
+                            <li>Your assessment has been added to our standard applicant pool.</li>
                             <li>Our team will review your profile in <strong>7-10 business days</strong>.</li>
                             <li>You will receive job matches via email as suitable opportunities become available.</li>
                         </ul>
