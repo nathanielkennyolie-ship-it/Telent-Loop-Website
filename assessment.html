@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Assessment - Talent Loop</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="address_autocomplete.css">
+    <link rel="stylesheet" href="address_autocomplete.css"> <!-- Assuming this file is correct -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Video Tags Removed -->
-
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="logo.png" alt="Talent Loop Logo" class="logo-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span class="logo-icon" style="display: none;">◆</span>
+                <img src="logo.png" alt="Talent Loop Logo" class="logo-image">
                 <span class="logo-text">Talent Loop</span>
             </div>
             <ul class="nav-menu" id="navMenu">
@@ -40,35 +37,33 @@
         <div class="container">
             
             <!-- STEP 1: PERSONAL INFORMATION FORM -->
-            <div class="personal-info-form" id="personalInfoForm">
+            <form class="personal-info-form" id="personalInfoForm">
                 <h1 class="page-title">Let's Get Started</h1>
                 <p class="intro-text">Please provide your contact information to begin.</p>
-                <form id="contactInfoForm" class="contact-info-form">
-                    <div class="form-row">
-                        <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
-                        <div class="form-group"><label for="lastName">Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Doe" required></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" placeholder="john.doe@example.com" required></div>
-                        <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required></div>
-                    </div>
-                    <div class="form-group" style="position: relative;">
-                        <label for="address">Street Address *</label>
-                        <input type="text" id="address" name="address" placeholder="Start typing your address..." required autocomplete="off">
-                        <div id="addressSuggestions" class="address-suggestions"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label for="city">City *</label><input type="text" id="city" name="city" placeholder="New York" required></div>
-                        <div class="form-group"><label for="zipCode">ZIP/Postal Code *</label><input type="text" id="zipCode" name="zipCode" placeholder="10001" required></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required><option value="">Select Country</option></select></div>
-                        <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required><option value="">Select Country First</option></select></div>
-                    </div>
-                    <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"></div>
-                    <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
-                </form>
-            </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="firstName">First Name *</label><input type="text" id="firstName" name="firstName" placeholder="John" required></div>
+                    <div class="form-group"><label for="lastName">Last Name *</label><input type="text" id="lastName" name="lastName" placeholder="Doe" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="email">Email Address *</label><input type="email" id="email" name="email" placeholder="john.doe@example.com" required></div>
+                    <div class="form-group"><label for="phone">Phone Number *</label><input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required></div>
+                </div>
+                <div class="form-group" style="position: relative;">
+                    <label for="address">Street Address *</label>
+                    <input type="text" id="address" name="address" placeholder="Start typing your address..." required autocomplete="off">
+                    <div id="addressSuggestions" class="address-suggestions"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="city">City *</label><input type="text" id="city" name="city" placeholder="New York" required></div>
+                    <div class="form-group"><label for="zipCode">ZIP/Postal Code *</label><input type="text" id="zipCode" name="zipCode" placeholder="10001" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="country">Country *</label><select id="country" name="country" required><option value="">Select Country</option></select></div>
+                    <div class="form-group"><label for="state">State/Province *</label><select id="state" name="state" required><option value="">Select Country First</option></select></div>
+                </div>
+                <div class="form-group"><label for="resume">Upload Resume (Optional)</label><input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx"></div>
+                <button type="submit" class="btn btn-primary btn-large">Continue to Assessment</button>
+            </form>
 
             <!-- STEP 2: ASSESSMENT INTRO -->
             <div class="assessment-intro" id="assessmentIntro" style="display: none;">
@@ -82,57 +77,7 @@
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
                 <div class="progress-text">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></div>
                 <form id="assessmentForm">
-                    <!-- Question 1 -->
-                    <div class="question-slide active" data-question="1">
-                        <h2 class="question-title">What is your current field of work or study?</h2>
-                        <div class="question-options">
-                            <label><input type="radio" name="q1" value="tech" required><span>Technology</span></label>
-                            <label><input type="radio" name="q1" value="finance"><span>Finance</span></label>
-                            <label><input type="radio" name="q1" value="healthcare"><span>Healthcare</span></label>
-                            <label><input type="radio" name="q1" value="other"><span>Other</span></label>
-                        </div>
-                    </div>
-                    <!-- Question 2-9 (Condensed for brevity) -->
-                    <div class="question-slide" data-question="2">...</div>
-                    <div class="question-slide" data-question="3">...</div>
-                    <div class="question-slide" data-question="4">...</div>
-                    <div class="question-slide" data-question="5">...</div>
-                    <div class="question-slide" data-question="6">...</div>
-                    <div class="question-slide" data-question="7">...</div>
-                    <div class="question-slide" data-question="8">...</div>
-                    <div class="question-slide" data-question="9">...</div>
-
-                    <!-- Question 10 - Priority Verification -->
-                    <div class="question-slide" data-question="10">
-                        <h2 class="question-title">Fast-Track Your Application?</h2>
-                        <p class="question-intro">Verified candidates are presented to employers first. Verify your profile for free with our partner to get priority access to job listings.</p>
-                        <div class="question-options verification-options">
-                            <label class="option-card priority-option">
-                                <input type="radio" name="q10" value="yes-verify" required>
-                                <span class="option-content">
-                                    <strong>Yes, fast-track my application!</strong>
-                                    <span>Get priority status and reviewed in 24-48 hours.</span>
-                                </span>
-                            </label>
-                            <label class="option-card">
-                                <input type="radio" name="q10" value="no-standard" required>
-                                <span class="option-content">
-                                    <strong>No, I'll wait.</strong>
-                                    <span>Continue with a standard application.</span>
-                                </span>
-                            </label>
-                        </div>
-                        <div id="standardApplicationWarning" style="display: none; background: #fff3cd; border-left: 4px solid #ffeeba; border-radius: 8px; padding: 1.5rem; margin-top: 1.5rem;">
-                            <h4 style="color: #856404; margin-bottom: 0.5rem;">Please Note:</h4>
-                            <p style="color: #856404; line-height: 1.6; margin-bottom: 0;">Standard applications are placed in our general pool and reviewed in <strong>7-10 business days</strong>. Priority candidates are reviewed first.</p>
-                        </div>
-                    </div>
-
-                    <div class="question-navigation">
-                        <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">Previous</button>
-                        <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Complete Assessment</button>
-                    </div>
+                    <!-- Questions will be dynamically shown by quiz.js -->
                 </form>
             </div>
 
@@ -152,7 +97,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- Assuming this file is correct -->
     <script src="quiz.js"></script>
 </body>
 </html>
