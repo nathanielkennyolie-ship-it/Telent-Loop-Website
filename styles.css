@@ -1262,11 +1262,11 @@ a {
 
 .question-slide {
     display: none;
-    animation: fadeInUp 0.5s ease;
 }
 
 .question-slide.active {
     display: block;
+    animation: fadeInUp 0.5s ease;
 }
 
 .question-title {
