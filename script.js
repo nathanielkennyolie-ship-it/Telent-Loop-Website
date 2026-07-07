@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = parseInt(el.getAttribute('data-target'), 10);
     if (isNaN(target) || target === 0) return;
 
-    el.style.minWidth = el.offsetWidth + 'px';
+    var w = el.offsetWidth;
+    el.style.minWidth = w + 'px';
     el.textContent = '0' + suffix;
 
     const duration = 1200;
@@ -104,14 +105,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================================
   const hero = document.getElementById('hero');
   if (hero) {
-    hero.addEventListener('mousemove', (e) => {
-      const { left, top, width, height } = hero.getBoundingClientRect();
-      const x = (e.clientX - left) / width - 0.5;
-      const y = (e.clientY - top) / height - 0.5;
-      const orbs = hero.querySelectorAll('.hero-orb');
-      orbs.forEach((orb, i) => {
-        const factor = (i + 1) * 15;
-        orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+    var heroRaf = null;
+    hero.addEventListener('mousemove', function(e) {
+      if (heroRaf) return;
+      heroRaf = requestAnimationFrame(function() {
+        heroRaf = null;
+        var rect = hero.getBoundingClientRect();
+        var x = (rect.left + rect.width / 2 - e.clientX) / rect.width;
+        var y = (rect.top + rect.height / 2 - e.clientY) / rect.height;
+        var orbs = hero.querySelectorAll('.hero-orb');
+        for (var i = 0; i < orbs.length; i++) {
+          var factor = (i + 1) * 15;
+          orbs[i].style.transform = 'translate(' + (x * -factor) + 'px,' + (y * -factor) + 'px)';
+        }
       });
     });
 
@@ -128,16 +134,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // ================================
   // 3D TILT ON FEATURE CARDS
   // ================================
-  document.querySelectorAll('.feature-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const inner = card.querySelector('.feature-card-inner');
-      if (!inner) return;
-      const { left, top, width, height } = card.getBoundingClientRect();
-      const x = (e.clientX - left) / width;
-      const y = (e.clientY - top) / height;
-      const tiltX = (y - 0.5) * -8;
-      const tiltY = (x - 0.5) * 8;
-      inner.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)`;
+  document.querySelectorAll('.feature-card').forEach(function(card) {
+    var cardRaf = null;
+    var lastX = 0, lastY = 0, cardLeft = 0, cardTop = 0, cardW = 0, cardH = 0;
+    card.addEventListener('mousemove', function(e) {
+      lastX = e.clientX; lastY = e.clientY;
+      if (cardRaf) return;
+      cardRaf = requestAnimationFrame(function() {
+        cardRaf = null;
+        var rect = card.getBoundingClientRect();
+        cardLeft = rect.left; cardTop = rect.top; cardW = rect.width; cardH = rect.height;
+        var inner = card.querySelector('.feature-card-inner');
+        if (!inner) return;
+        var x = (lastX - cardLeft) / cardW;
+        var y = (lastY - cardTop) / cardH;
+        inner.style.transform = 'perspective(800px) rotateX(' + ((y - 0.5) * -8) + 'deg) rotateY(' + ((x - 0.5) * 8) + 'deg) translateY(-4px)';
+      });
     });
 
     card.addEventListener('mouseleave', () => {
