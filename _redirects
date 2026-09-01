@@ -42,6 +42,10 @@
 # ── Stale blog slugs Google crawled ─────────────────────────────────────────
 /blog/netflix-careers-guide    /blog/working-at-netflix-career-guide   301!
 
+# ── Career change guide — old slug → new slug ─────────────────────────────────
+/blog/career-change-guide-2026    /blog/how-to-change-careers-in-2026   301!
+/blog/career-change-guide-2026/*  /blog/how-to-change-careers-in-2026/:splat 301!
+
 # ── Job detail pages → main jobs page (until individual pages are built) ────
 /jobs/remote-customer-support-specialist       /jobs    301!
 /jobs/remote-data-entry-clerk                  /jobs    301!
